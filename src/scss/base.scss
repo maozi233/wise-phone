@@ -1,0 +1,59 @@
+$text-black: #333;
+$text-gray: #666;
+$text-french:#999;
+$text-green: #279b3c;
+$text-red: #fb2f00;
+$text-blue: #00b3fe;
+
+$border-gray: #ddd;
+$border-french: #eee;
+
+$shadow-black: #b7b7b7;
+
+p {
+  margin:0;
+}
+
+img {
+  font-size: 0;
+}
+
+ul,li {
+  list-style: none;
+  margin:0;
+  padding: 0;
+}
+
+hr{
+  margin: 0;
+}
+
+a:hover, a:visited, a:link, a:active {
+   text-decoration: none;
+   color: $text-gray;
+}
+
+input, button {
+  border: 0;
+}
+
+input {
+  outline: none;
+}
+
+button {
+  border-radius: 5px;
+}
+
+input::-webkit-input-placeholder{
+  color:$text-french;
+}
+input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+  color:$text-french;
+}
+input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+  color:$text-french;
+}
+input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+  color:$text-french;
+}
