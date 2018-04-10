@@ -33,7 +33,7 @@
       规格 <span>{{detail.exContent.spec.counts}}{{specs.unit[detail.exContent.spec.unit].title}} / {{specs.pack[detail.exContent.spec.pack].title}}</span>
     </div>
 
-    <review-entry v-if="id" :id="id"></review-entry>
+    <review-entry v-if="id" :id="id" :shopId="shopId"></review-entry>
 
     <section v-if="detail">
       <div class="title">商品详情</div>
@@ -70,6 +70,7 @@
     <div class="flex-bottom"></div>
     <flex-bottom  v-if="id"
                   :id="id"
+                  :shopId="shopId"
                   :showRight="false"></flex-bottom>
   </div>
 </template>
@@ -95,7 +96,8 @@ export default {
       id: '',
       detail: '',
       specs: Specs,
-      count: 0
+      count: 0,
+      shopId: ''
     }
   },
 
@@ -129,6 +131,7 @@ export default {
         if (res) {
           res.exContent = JSON.parse(res.extContent.content)
           vm.detail = res
+          vm.shopId = res.dtManager.id
         }
       })
     })

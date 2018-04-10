@@ -74,7 +74,7 @@
       <div class="title">
         明星配方
       </div>
-      <div class="swiper-container star-formula-container">
+      <div class="swiper-container star-formula-container" v-if="allData.starFormula.length > 0">
         <div class="swiper-wrapper" style="padding-bottom: .4rem;">
           <div  class="swiper-slide"
                 v-for="(item, index) in allData.starFormula" :key="index">
@@ -185,7 +185,9 @@ export default {
 
   data () {
     return {
-      allData: '',
+      allData: {
+        starFormula: []
+      },
       notice: '',
       banners: '',
       formulators_back: [],
@@ -266,6 +268,7 @@ export default {
                 modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
               }
               let translate = slideProgress * modify * (0.43 * silideWidth) + 'px'
+              // let translate = 0
               let scale = 1 - Math.abs(slideProgress) / 5
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
               slide.transform('translateX(' + translate + ') scale(' + scale + ')')
@@ -382,7 +385,7 @@ export default {
         res.centralizedPurchasingSupplier.length = res.centralizedPurchasingSupplier.length < 3
           ? res.centralizedPurchasingSupplier.length
           : 3
-        console.log(res)
+        // console.log(res)
         this.allData = res
 
         this.$nextTick(() => {
@@ -457,7 +460,7 @@ export default {
     box-shadow: 0 0 .2rem #b7b7b7;
     overflow: hidden;
     height: 5.1rem;
-    width: 66%;
+    width: 5rem;
     background: white;
 
     & > img{
@@ -490,8 +493,7 @@ export default {
 </style>
 
 <style scoped lang="scss">
-@import '../../scss/shotcut.scss';
-// @import '@scss/shotcut.scss';
+@import '~scss/shotcut.scss';
 
 section{
   margin-bottom: .2rem;

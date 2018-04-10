@@ -19,7 +19,7 @@ export class Tools {
   }
 
   static getUser () {
-    localStorage.getItem(ENV.USER_KEY)
+    return JSON.parse(localStorage.getItem(ENV.USER_KEY))
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="flex-bottom-container">
     <div class="btns" :class="showLeft ? '' : 'gone'">
-      <div class="box">
+      <div class="box" @click="clickShop">
         <img src="~images/icon_shop_symbol.png">
         <span>店铺</span>
       </div>
@@ -34,6 +34,10 @@ export default {
 
   props: {
     id: {
+      type: String,
+      default: ''
+    },
+    shopId: {
       type: String,
       default: ''
     },
@@ -96,6 +100,15 @@ export default {
 
     onRightBtnClick () {
       this.rightBtnHandle()
+    },
+
+    clickShop () {
+      this.$router.push({
+        path: '/shop',
+        query: {
+          id: this.shopId
+        }
+      })
     }
   },
 

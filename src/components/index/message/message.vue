@@ -15,16 +15,22 @@
 
 <script>
 import { MessageService } from 'api/index/message-service'
+import { mapMutations } from 'vuex'
+
 export default {
   data () {
     return {
+      // messages: this.$store.state.messages.list
       messages: this.$store.state.messages.list || []
     }
   },
   methods: {
     goBack () {
       this.$router.go(-1)
-    }
+    },
+    ...mapMutations({
+      setMessages: 'setMessages'
+    })
   },
 
   mounted () {
@@ -36,6 +42,7 @@ export default {
       }).then(res => {
         if (res) {
           this.messages = res.list
+          this.setMessages(res)
         }
       })
     }

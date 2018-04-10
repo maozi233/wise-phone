@@ -17,7 +17,7 @@
       <no-data v-if="!detail"></no-data>
     </div>
 
-    <review-entry :id="id"></review-entry>
+    <review-entry :id="id" :shopId="shopId"></review-entry>
 
     <section v-if="detail">
       <div class="title">商品详情</div>
@@ -37,6 +37,7 @@
     <div class="flex-bottom"></div>
     <flex-bottom  v-if="id"
                   :id="id"
+                  :shopId="shopId"
                   :rightBtnName="'联系我们'"
                   :rightBtnHandle="contact"></flex-bottom>
   </div>
@@ -63,7 +64,8 @@ export default {
     return {
       id: '',
       detail: '',
-      contactPopVisible: false
+      contactPopVisible: false,
+      shopId: ''
     }
   },
 
@@ -93,6 +95,8 @@ export default {
           res.dtManager.maptel = `tel:${res.dtManager.tel}`
           res.dtManager.mapemail = `mailto:${res.dtManager.tel}`
           vm.detail = res
+
+          vm.shopId = res.dtManager.id
         }
       })
     })

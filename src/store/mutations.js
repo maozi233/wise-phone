@@ -13,6 +13,9 @@ const mutations = {
   },
   setMessages (state, messages) {
     state.messages = messages
+  },
+  setUnReadMsg (state, messages) {
+    state.unReadMsg = messages
   }
 }
 export default mutations

@@ -10,13 +10,13 @@
             v-for="(item, index) in shops" :key="index">
         <div class="top">
           <div class="shop-detail">
-            <img :src="item.dtManager.logo">
+            <img v-lazy="item.dtManager.logo">
             <div class="shop-des">
               <p class="shop-name">{{item.dtManager.shopName}}</p>
               <p class="company-name">{{item.dtManager.companyName}}</p>
             </div>
           </div>
-          <span class="btn-shop">进店</span>
+          <span class="btn-shop" @click="toShop(item.dtManager.id)">进店</span>
         </div>
 
         <div class="type">
@@ -66,6 +66,15 @@ export default {
     onProductClick (id) {
       this.$router.push({
         path: 'producer/detail',
+        query: {
+          id
+        }
+      })
+    },
+
+    toShop (id) {
+      this.$router.push({
+        path: '/shop',
         query: {
           id
         }

@@ -28,6 +28,7 @@
       <router-link to="/lab" >共享实验室</router-link>
       <router-link to="/information" >行业资讯</router-link>
       <router-link to="/lesson" >公开课</router-link>
+      <router-link to="/mine" >我的</router-link>
 
       <div class="btns">
         <div class="btn-content">
@@ -43,7 +44,7 @@
         <div class="btn-content" @click="toMessage">
           <div class="icon">
             <img src="../../assets/images/information.png">
-            <mt-badge class="badge" color="#9c36b5" v-if="messageLenth !== -1">{{messageLenth}}</mt-badge>
+            <mt-badge class="badge" color="#9c36b5" v-if="messageLenth !== 0">{{messageLenth}}</mt-badge>
           </div>
           <span>消息</span>
         </div>
@@ -197,6 +198,7 @@ import {CategoryService} from 'api/index/category-service'
 import {InquiryService} from 'api/index/inquiry-service'
 import { MessageService } from 'api/index/message-service'
 import {mapMutations} from 'vuex'
+import { Tools } from 'utils/tools'
 
 export default {
   name: 'sy-header',
@@ -238,8 +240,7 @@ export default {
         goods: '',
         formula: '',
         shop: ''
-      },
-      messageLenth: -1
+      }
     }
   },
 
@@ -250,6 +251,9 @@ export default {
 
     stockTypes () {
       return this.$store.state.materialTagsCache
+    },
+    messageLenth () {
+      return this.$store.state.unReadMsg || 0
     }
   },
 
@@ -361,7 +365,7 @@ export default {
 
     clickStockTag (name) {
       this.$router.push({
-        path: `goods-result`,
+        path: `/goods-result`,
         query: {
           msg: name
         }
@@ -371,7 +375,7 @@ export default {
     ...mapMutations({
       setFormulaTags: 'setFormulaTags',
       setMaterialTags: 'setMaterialTags',
-      setMessages: 'setMessages'
+      setUnReadMsg: 'setUnReadMsg'
     })
   },
 
@@ -396,15 +400,15 @@ export default {
           this.setMaterialTags(res)
         })
     }
-
-    if (this.messageLenth === -1) {
-      this.messageService.get({
-        start: 0,
-        limit: 50
-      }).then(res => {
-        this.setMessages(res)
-        this.messageLenth = res.total
-      })
+    let user = Tools.getUser()
+    // console.log(`user= ${user}`)
+    if (user) {
+      this.messageService.unRead()
+        .then(res => {
+          if (res) {
+            this.setUnReadMsg(res.count)
+          }
+        })
     }
   },
 

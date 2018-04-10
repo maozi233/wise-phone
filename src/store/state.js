@@ -8,7 +8,9 @@ const state = {
   // 战略伙伴数据
   cooperCache: [],
   // 信息
-  messages: {}
+  messages: {},
+  // 未读消息
+  unReadMsg: 0
 }
 
 export default state

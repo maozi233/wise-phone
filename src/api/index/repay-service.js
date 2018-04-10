@@ -23,4 +23,16 @@ export class PayService extends BaseService {
       body: params
     })
   }
+
+  getIp (fn) {
+    // return HttpClient.get('http://freegeoip.net/json/', {
+    //   external: true
+    // })
+    $.ajax({
+      url: 'http://freegeoip.net/json/',
+      success: function (data) {
+        fn && fn(data.ip)
+      }
+    })
+  }
 }

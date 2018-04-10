@@ -51,9 +51,13 @@ import LabList from '@/components/index/lab/lab-list'
 import LabDetail from '@/components/index/lab/lab-detail'
 // user先关组件
 import Login from '@/components/user/login'
-import UserInfo from '@/components/user/user-info'
 // 信息
 import Message from '@/components/index/message/message'
+// 店铺
+import Shop from '@/components/index/shop/shop'
+// 共享实验室
+import Mine from '@/components/index/mine/mine'
+import MineList from '@/components/index/mine/mine-list'
 // 公用组件
 import NotFound from '@/components/not-found'
 
@@ -199,6 +203,16 @@ export default new Router({
       ]
     },
     {
+      path: '/mine',
+      component: Mine,
+      children: [
+        {
+          path: '',
+          component: MineList
+        }
+      ]
+    },
+    {
       path: '/reviews',
       component: Reviews
     },
@@ -220,6 +234,10 @@ export default new Router({
       component: ShopResult
     },
     {
+      path: '/shop',
+      component: Shop
+    },
+    {
       path: '/help',
       component: Help,
       children: [
@@ -237,11 +255,6 @@ export default new Router({
       path: '/message',
       meta: {requiresAuth: true},
       component: Message
-    },
-    {
-      path: '/user-info',
-      meta: {requiresAuth: true},
-      component: UserInfo
     },
     {
       path: '*',

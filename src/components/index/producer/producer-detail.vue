@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <review-entry :id="id"></review-entry>
+    <review-entry :id="id" :shopId="shopId"></review-entry>
 
     <section v-if="detail">
       <div class="title">商品详情</div>
@@ -51,7 +51,8 @@
       </div>
       <div class="box">
         <div  class="goods"
-              v-for="(item, index) in formulationGoods" :key="index">
+              v-for="(item, index) in formulationGoods" :key="index"
+              @click="onFormulaClick(item.id)">
           <p class="name single-line">{{item.name}}</p>
           <p class="subject single-line">{{item.subject || '暂无介绍'}}</p>
         </div>
@@ -70,6 +71,7 @@
     <div class="flex-bottom"></div>
     <flex-bottom  v-if="id"
                   :id="id"
+                  :shopId="shopId"
                   :rightBtnName="'询盘'"
                   :rightBtnHandle="enquiry"></flex-bottom>
   </div>
@@ -106,13 +108,23 @@ export default {
         tel: '',
         des: ''
       },
-      specs: Specs
+      specs: Specs,
+      shopId: ''
     }
   },
 
   methods: {
     goBack () {
       this.$router.go(-1)
+    },
+
+    onFormulaClick (id) {
+      this.$router.push({
+        path: '/star-formula/detail',
+        query: {
+          formulaId: id
+        }
+      })
     },
 
     sendConcat () {
@@ -157,6 +169,8 @@ export default {
         if (res) {
           res.exContent = JSON.parse(res.extContent.content)
           vm.detail = res
+
+          vm.shopId = res.dtManager.id
 
           vm.formulationGoods = res.goodsFormulationList
         }

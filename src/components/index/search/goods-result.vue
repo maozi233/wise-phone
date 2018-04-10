@@ -42,7 +42,7 @@
             </span>
           </p>
           <p>所属板块:<span>生产商之窗</span></p>
-          <span class="buy flex-center">购买</span>
+          <span class="buy flex-center" @click="onItemClick(item.id)">购买</span>
         </div>
         <no-data v-show="goods.length === 0"></no-data>
       </div>
@@ -126,6 +126,12 @@ export default {
     },
 
     onItemClick (id) {
+      this.$router.push({
+        path: '/producer/detail',
+        query: {
+          id
+        }
+      })
     },
 
     getFormulas (id) {

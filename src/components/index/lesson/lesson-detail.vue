@@ -76,8 +76,7 @@ export default {
       orderId: '',
       payCode: '',
       paying: '',
-      buyed: false,
-      ip: ''
+      buyed: false
     }
   },
 
@@ -101,7 +100,8 @@ export default {
       if (!this.isRegister) {
         this.$refs.flexPop.show()
       } else {
-        this.pay()
+        // this.pay()
+        this.payService.getIp(this.pay)
       }
     },
 
@@ -123,18 +123,19 @@ export default {
         }).then(res => {
           Toast('报名成功，请支付')
           this.isRegister = true
-          this.pay()
+          // this.pay()
+          this.payService.getIp(this.pay)
           this.orderId = res.id
         })
       }
     },
 
-    pay () {
+    pay (ip) {
       this.$refs.payPop.show()
       this.payService.wechat({
         orderId: this.orderId,
         payService: 5,
-        ip: this.ip
+        ip
       }).then(res => {
         if (res) {
           this.payCode = decodeURIComponent(res.payInfo)

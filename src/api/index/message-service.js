@@ -18,4 +18,8 @@ export class MessageService extends BaseService {
       body: params
     })
   }
+
+  unRead () {
+    return HttpClient.get(`${this.apiContext}unReadedCount`)
+  }
 }

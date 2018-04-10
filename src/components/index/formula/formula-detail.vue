@@ -6,20 +6,20 @@
         <img src="~images/back.png" @click="goBack">
         <span>商品详情</span>
       </div>
-      <div class="content">
+      <div class="content"  >
         <div class="price">
           <span>¥{{detail.price}}/kg</span>
-          <p class="tags">
+          <p class="tags" v-if="detail.category">
             <span class="flex-center">{{detail.category.name}}</span>
           </p>
         </div>
-        <div class="name">{{detail.name}}</div>
+        <div class="name single-line">{{detail.name}}</div>
         <div class="des single-line">{{detail.subject || '无简介'}}</div>
         <div class="support">技术支持: {{detail.exContent.teac.join(' ') || '无支持'}}</div>
       </div>
     </div>
 
-    <review-entry :id="formulaId"></review-entry>
+    <review-entry :id.sync="formulaId" :shopId="shopId"></review-entry>
 
     <section v-if="detail">
       <div class="title">商品详情</div>
@@ -65,7 +65,8 @@
       </div>
       <div class="box">
         <div  class="goods"
-              v-for="(item, index) in formulationGoods" :key="index">
+              v-for="(item, index) in formulationGoods" :key="index"
+              @click="onClickRecommend(item.id)">
           <p class="name single-line">{{item.name}}</p>
           <p class="price">¥{{item.price}}</p>
         </div>
@@ -84,6 +85,7 @@
     <div class="flex-bottom"></div>
     <flex-bottom  v-if="formulaId"
                   :id="formulaId"
+                  :shopId="shopId"
                   :rightBtnName="'咨询'"
                   :rightBtnHandle="consult"></flex-bottom>
   </div>
@@ -111,6 +113,7 @@ export default {
   data () {
     return {
       formulaId: '',
+      shopId: '',
       detail: '',
       formulationGoods: [],
       concatForm: {
@@ -150,6 +153,15 @@ export default {
           this.concatForm.des = ''
         }
       })
+    },
+
+    onClickRecommend (id) {
+      this.$router.push({
+        path: '/producer/detail',
+        query: {
+          id
+        }
+      })
     }
   },
 
@@ -164,6 +176,7 @@ export default {
           res.exContent = res.extContent.content === '' ? {teac: []} : JSON.parse(res.extContent.content)
           vm.detail = res
           vm.formulationGoods = res.formulationGoods
+          vm.shopId = res.dtManager.id
         }
       })
     })
@@ -352,7 +365,7 @@ section {
       &:nth-child(even) {
         border: none;
       }
-      &:nth-child(n + 2) {
+      &:nth-last-child(1),&:nth-last-child(2) {
         margin-bottom : 0;
       }
 

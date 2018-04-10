@@ -18,6 +18,7 @@
     <div class="flex-bottom"></div>
     <flex-bottom  v-if="goodsId"
                   :id="goodsId"
+                  :shopId="shopId"
                   :rightBtnName="'咨询'"
                   :rightBtnHandle="consult"></flex-bottom>
   </div>
@@ -29,6 +30,13 @@ import FlexBottom from 'comp/index/flex-bottom'
 import { ReviewService } from 'api/index/review-service'
 
 export default {
+  props: {
+    shopId: {
+      type: String,
+      default: ''
+    }
+  },
+
   components: {
     [Header.name]: Header,
     FlexBottom
