@@ -76,7 +76,8 @@ export default {
       orderId: '',
       payCode: '',
       paying: '',
-      buyed: false
+      buyed: false,
+      ip: ''
     }
   },
 
@@ -130,9 +131,10 @@ export default {
 
     pay () {
       this.$refs.payPop.show()
-      this.payService.get({
+      this.payService.wechat({
         orderId: this.orderId,
-        payService: 4
+        payService: 5,
+        ip: this.ip
       }).then(res => {
         if (res) {
           this.payCode = decodeURIComponent(res.payInfo)
@@ -162,7 +164,9 @@ export default {
       if (this.paying) {
         clearInterval(this.paying)
       }
-    }
+    },
+
+    getIp () {}
   },
 
   created () {

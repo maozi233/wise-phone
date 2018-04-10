@@ -247,6 +247,8 @@ export default {
     },
 
     initStarFomula () {
+      // let rem = document.documentElement.style.fontSize.replace('px', '')
+
       this.starFormulaSwiper = new Swiper('.star-formula-container', {
         watchSlidesProgress: true,
         slidesPerView: 'auto',
@@ -255,20 +257,20 @@ export default {
         on: {
           progress: function (progress) {
             for (let i = 0; i < this.slides.length; i++) {
-              let rem = parseInt(document.documentElement.style.fontSize)
               let slide = this.slides.eq(i)
+              // console.log(slide.css('width'))
+              let silideWidth = slide.css('width').replace(/px/, '')
               let slideProgress = this.slides[i].progress
               let modify = 1
               if (Math.abs(slideProgress) > 1) {
                 modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
               }
-              let translate = slideProgress * modify * (rem * 1) + 'px'
-              // console.log(translate)
+              let translate = slideProgress * modify * (0.43 * silideWidth) + 'px'
               let scale = 1 - Math.abs(slideProgress) / 5
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
               slide.transform('translateX(' + translate + ') scale(' + scale + ')')
               slide.css('zIndex', zIndex)
-              slide.css('opacity', (scale - 0.2))
+              slide.css('opacity', scale)
               if (Math.abs(slideProgress) >= 2) {
                 slide.css('opacity', 0)
               }

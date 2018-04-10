@@ -10,6 +10,9 @@ const mutations = {
   },
   setCoopers (state, coopers) {
     state.cooperCache = coopers
+  },
+  setMessages (state, messages) {
+    state.messages = messages
   }
 }
 export default mutations

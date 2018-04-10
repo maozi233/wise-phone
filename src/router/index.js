@@ -41,9 +41,19 @@ import ShopResult from '@/components/index/search/shop-result'
 import Help from '@/components/index/help/help'
 import HelpList from '@/components/index/help/help-list'
 import HelpDetail from '@/components/index/help/help-detail'
+// 协同采购
+import Purchase from '@/components/index/purchase/purchase'
+import PurchaseList from '@/components/index/purchase/purchase-list'
+import PurchaseDetail from '@/components/index/purchase/purchase-detail'
+// 共享实验室
+import Lab from '@/components/index/lab/lab'
+import LabList from '@/components/index/lab/lab-list'
+import LabDetail from '@/components/index/lab/lab-detail'
 // user先关组件
 import Login from '@/components/user/login'
 import UserInfo from '@/components/user/user-info'
+// 信息
+import Message from '@/components/index/message/message'
 // 公用组件
 import NotFound from '@/components/not-found'
 
@@ -161,6 +171,34 @@ export default new Router({
       ]
     },
     {
+      path: '/purchase',
+      component: Purchase,
+      children: [
+        {
+          path: '',
+          component: PurchaseList
+        },
+        {
+          path: 'detail',
+          component: PurchaseDetail
+        }
+      ]
+    },
+    {
+      path: '/lab',
+      component: Lab,
+      children: [
+        {
+          path: '',
+          component: LabList
+        },
+        {
+          path: 'detail',
+          component: LabDetail
+        }
+      ]
+    },
+    {
       path: '/reviews',
       component: Reviews
     },
@@ -196,8 +234,12 @@ export default new Router({
       ]
     },
     {
+      path: '/message',
+      meta: {requiresAuth: true},
+      component: Message
+    },
+    {
       path: '/user-info',
-      name: 'user-info',
       meta: {requiresAuth: true},
       component: UserInfo
     },

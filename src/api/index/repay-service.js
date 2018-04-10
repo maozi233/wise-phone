@@ -17,4 +17,10 @@ export class PayService extends BaseService {
     let str = $.param(params)
     return HttpClient.get(`${this.apiContext}query?${str}`, {mask: false})
   }
+
+  wechat (params) {
+    return HttpClient.put(`${this.apiContext}wechath5?`, {
+      body: params
+    })
+  }
 }

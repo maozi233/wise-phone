@@ -6,7 +6,9 @@ const state = {
   // 友情链接数据
   linksCache: [],
   // 战略伙伴数据
-  cooperCache: []
+  cooperCache: [],
+  // 信息
+  messages: {}
 }
 
 export default state
