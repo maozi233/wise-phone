@@ -245,7 +245,7 @@ export default {
 
       .name {
         font-size: .28rem;
-        line-height: .28rem;
+        line-height: 1.2;
         margin-bottom: .15rem;
       }
 

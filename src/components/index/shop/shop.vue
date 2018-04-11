@@ -25,7 +25,7 @@
 
     <mt-tab-container class="pager-body" v-model="activePager">
         <mt-tab-container-item id="tab1">
-          <section class="banner swiper-container" v-if="banners.length > 0">
+          <!-- <section class="banner swiper-container" v-if="banners.length > 0">
             <div class="swiper-wrapper">
               <div  class="swiper-slide"
                     v-for="(item, index) in banners" :key="index">
@@ -33,7 +33,7 @@
               </div>
             </div>
             <div class="swiper-pagination"></div>
-          </section>
+          </section> -->
 
           <div class="recommend">
             <div  class="goods"
@@ -102,6 +102,7 @@ import Swiper from 'swiper'
 import {TabContainer, TabContainerItem, Toast, Popup} from 'mint-ui'
 import NoData from 'comp/no-data'
 import { ShopResultService } from 'api/index/shop-service'
+import { ShopDecorate } from 'api/index/shopdecorate-service'
 import { FavoriteService } from 'api/index/favorite-service'
 import { GoodsService } from 'api/index/goods-service'
 import { GroupIdService } from 'api/index/groupid-service'
@@ -120,15 +121,17 @@ export default {
       shopId: '',
       detail: {},
       activePager: 'tab1',
-      banners: [],
-      banner: '',
+      // banners: [],
+      // banner: '',
       recommends: [],
       tags: [],
       activeTagId: '',
       goods: [],
       searchVisible: false,
       keyword: '',
-      imgZs: ''
+      imgZs: '',
+      goodsProp: 0,
+      shopDes: []
     }
   },
 
@@ -181,13 +184,26 @@ export default {
       this.goodsService.search({
         start: 0,
         limit: 50,
-        dtmId: this.shopid,
+        dtmId: this.shopId,
         groupId: this.activeTagId,
-        goodsProp: 1,
+        goodsProp: this.goodsProp,
         keyword: this.keyword
       }).then(res => {
         if (res) {
           this.goods = res.list
+        }
+      })
+    },
+
+    getShopDes () {
+      this.shopDecorate.get({
+        dtManagerId: this.shopId,
+        type: 1
+      }).then(res => {
+        if (res) {
+          this.shopDes = res.content ? JSON.parse(res.content.content) : ''
+          // TODO: 店铺简介是否和pc保持一致？
+          console.log(this.shopDes)
         }
       })
     },
@@ -215,6 +231,7 @@ export default {
     this.goodsService = new GoodsService()
     this.groupIdService = new GroupIdService()
     this.shopResultService = new ShopResultService()
+    this.shopDecorate = new ShopDecorate()
   },
 
   mounted () {
@@ -235,11 +252,13 @@ export default {
           if (res) {
             vm.detail = res
 
-            vm.banners = res.certifications.map(e => {
-              return JSON.parse(e.document.content).imgs ? JSON.parse(e.document.content).imgs[0] : false
-            }).filter(e => e)
+            vm.goodsProp = res.identityType
 
-            // console.log(vm.banners)
+            // vm.banners = res.certifications.map(e => {
+            //   return JSON.parse(e.document.content).imgs ? JSON.parse(e.document.content).imgs[0] : false
+            // }).filter(e => e)
+
+            // TODO: 证书是否有多个？
             vm.imgZs = JSON.parse(res.user.extContent.content).imgs ? JSON.parse(res.user.extContent.content).imgs[0] : ''
 
             vm.$nextTick(() => {
@@ -250,22 +269,26 @@ export default {
                 },
                 autoplay: true
               })
+
+              // 获取tab1的推荐商品
+              vm.goodsService.search({
+                start: 0,
+                limit: 50,
+                dtmId: vm.shopId,
+                goodsProp: vm.goodsProp,
+                recommender: true
+              }).then(res => {
+                if (res) {
+                  vm.recommends = res.list
+                }
+              })
+
+              vm.getGoods()
+              vm.getShopDes()
             })
           }
         })
 
-      // 获取tab1的推荐商品
-      vm.goodsService.search({
-        start: 0,
-        limit: 50,
-        dtmId: vm.shopId,
-        goodsProp: 1,
-        recommender: true
-      }).then(res => {
-        if (res) {
-          vm.recommends = res.list
-        }
-      })
       // 获取产品分类
       vm.groupIdService.list({
         dtmId: vm.shopId
@@ -274,8 +297,6 @@ export default {
           vm.tags = [{name: '全部', id: ''}].concat(res)
         }
       })
-
-      vm.getGoods()
     })
   }
 }

@@ -55,11 +55,15 @@ import Login from '@/components/user/login'
 import Message from '@/components/index/message/message'
 // 店铺
 import Shop from '@/components/index/shop/shop'
-// 共享实验室
-import Mine from '@/components/index/mine/mine'
-import MineList from '@/components/index/mine/mine-list'
 // 公用组件
 import NotFound from '@/components/not-found'
+// 后台管理
+import Mine from '@/components/manage/mine'
+import MineList from '@/components/manage/mine-list'
+// 库存订单
+import MgtStock from '@/components/manage/stock/stock-order'
+import MgtStockList from '@/components/manage/stock/stock-list'
+import MgtStockDetail from '@/components/manage/stock/stock-detail'
 
 Vue.use(Router)
 
@@ -203,12 +207,26 @@ export default new Router({
       ]
     },
     {
-      path: '/mine',
+      path: '/manage',
       component: Mine,
       children: [
         {
           path: '',
           component: MineList
+        },
+        {
+          path: 'stock',
+          component: MgtStock,
+          children: [
+            {
+              path: '',
+              component: MgtStockList
+            },
+            {
+              path: 'detail',
+              component: MgtStockDetail
+            }
+          ]
         }
       ]
     },

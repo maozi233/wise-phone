@@ -4,9 +4,11 @@
     <div class="list">
       <div class="item"
             v-for="(item, index) in infos" :key="index">
-        <img :src="item.img" class="left">
-        <p>{{item.title}}</p>
-        <img src="~images/information-more.png" class="right">
+        <router-link :to="`/manage${item.path}`">
+          <img :src="item.img" class="left">
+          <p>{{item.title}}</p>
+          <img src="~images/information-more.png" class="right">
+        </router-link>
       </div>
     </div>
   </div>
@@ -31,25 +33,32 @@ export default {
     return {
       infos: [{
         title: '库存订单',
-        img: icon1
+        img: icon1,
+        path: '/stock'
       }, {
         title: '配方订单',
-        img: icon2
+        img: icon2,
+        path: '/'
       }, {
         title: '我的关注',
-        img: icon3
+        img: icon3,
+        path: '/'
       }, {
         title: '地址管理',
-        img: icon4
+        img: icon4,
+        path: '/'
       }, {
         title: '投诉举报',
-        img: icon5
+        img: icon5,
+        path: '/'
       }, {
         title: '意见反馈',
-        img: icon6
+        img: icon6,
+        path: '/'
       }, {
         title: '集采确认',
-        img: icon7
+        img: icon7,
+        path: '/'
       }]
     }
   },
@@ -66,7 +75,7 @@ export default {
   padding: 0 .3rem;
   background: white;
 
-  .item {
+  .item > a {
     height: .9rem;
     box-sizing: border-box;
     border-bottom: 1px solid $border-gray;

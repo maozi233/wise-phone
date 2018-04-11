@@ -129,7 +129,7 @@ export default {
 
     sendConcat () {
       if (!this.concatForm.name || !this.concatForm.tel || !this.concatForm.des) {
-        return Toast('信息未填写完整')
+        return Toast({message: '信息未填写完整', position: 'bottom'})
       }
       this.$refs.flexPop.hide()
       this.inquiryService.add({
@@ -317,7 +317,7 @@ section {
       &:nth-child(even) {
         border: none;
       }
-      &:nth-child(n + 2) {
+      &:nth-last-child(1),&:nth-last-child(2) {
         margin-bottom : 0;
       }
 

@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import {MessageBox} from 'mint-ui'
+import $ from 'jquery'
 const ENV = process.env
 
 export class Tools {
@@ -20,6 +21,10 @@ export class Tools {
 
   static getUser () {
     return JSON.parse(localStorage.getItem(ENV.USER_KEY))
+  }
+
+  static toTop (transition = 0) {
+    $('html,body').animate({scrollTop: 0}, transition)
   }
 }
 

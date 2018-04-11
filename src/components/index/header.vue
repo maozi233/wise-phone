@@ -28,7 +28,7 @@
       <router-link to="/lab" >共享实验室</router-link>
       <router-link to="/information" >行业资讯</router-link>
       <router-link to="/lesson" >公开课</router-link>
-      <router-link to="/mine" >我的</router-link>
+      <router-link to="/manage" >我的</router-link>
 
       <div class="btns">
         <div class="btn-content">
@@ -172,8 +172,7 @@
           <mt-tab-container-item id="service-tab4">
             <div class="introduction">
               <p class="">为配方师提供从实验场地-原料提供-小样保管-样品寄送-技术交流-自创品牌推广的一站式解决方案。</p>
-              <router-link to="/question" >查看详情</router-link>
-              <!-- <a>查看详情</a> -->
+              <router-link to="/lab" >查看详情</router-link>
             </div>
           </mt-tab-container-item>
           <mt-tab-container-item id="service-tab5">
@@ -181,7 +180,6 @@
               <div class="introduction">
                 <p>您是否对妆配库能提供给您的服务仍有疑问？您是否对配方中原料的应用仍有困惑？您也可以找到您需要的答案，欢迎您的提问和建议。</p>
                <router-link to="/question" >查看详情</router-link>
-               <!-- <a @click="toQ">查看详情</a> -->
               </div>
             </div>
           </mt-tab-container-item>
@@ -580,7 +578,7 @@ export default {
 
         & > button {
           height:100%;
-          width: 1rem;
+          width: 1.2rem;
           font-size: .28rem;
           color: white;
           background: $text-green;

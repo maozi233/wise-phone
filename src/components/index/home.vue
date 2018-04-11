@@ -33,7 +33,7 @@
       </div>
       <mt-tab-container class="pager-body" v-model="activePager" :swipeable='true'>
         <mt-tab-container-item id="tab1">
-          <div class="item-container" v-for="(item, index) in formulators_back" :key="index">
+          <div class="item-container" v-for="(item, index) in formulators_back" :key="index" @click="onShopClick(item.id)">
             <img v-lazy="item.head">
             <div class="content">
               <p class="name single-line">{{item.nickName}}</p>
@@ -42,7 +42,7 @@
           </div>
         </mt-tab-container-item>
         <mt-tab-container-item id="tab2">
-          <div class="item-container" v-for="(item, index) in supplier_back" :key="index">
+          <div class="item-container" v-for="(item, index) in supplier_back" :key="index" @click="onShopClick(item.id)">
             <img v-lazy="item.head">
             <div class="content">
               <p class="name single-line">{{item.nickName}}</p>
@@ -51,7 +51,7 @@
           </div>
         </mt-tab-container-item>
         <mt-tab-container-item id="tab3">
-          <div class="item-container" v-for="(item, index) in technicalService_back" :key="index">
+          <div class="item-container" v-for="(item, index) in technicalService_back" :key="index" @click="onServiceClick(item.id)">
             <img v-lazy="item.head">
             <div class="content">
               <p class="name single-line">{{item.nickName}}</p>
@@ -77,7 +77,8 @@
       <div class="swiper-container star-formula-container" v-if="allData.starFormula.length > 0">
         <div class="swiper-wrapper" style="padding-bottom: .4rem;">
           <div  class="swiper-slide"
-                v-for="(item, index) in allData.starFormula" :key="index">
+                v-for="(item, index) in allData.starFormula" :key="index"
+                @click="onStarFormulaClick(item.id)">
             <img :src="item.head" alt="">
             <p class="title single-line">{{item.name}}</p>
             <p class="subject">{{item.subject}}</p>
@@ -139,11 +140,12 @@
         集中采购
       </div>
       <div class="content">
-        <img src="../../assets/images/solution.jpg" alt="">
+        <img src="../../assets/images/solution.jpg" @click="toPurchase">
         <div class="img-box">
           <!-- item.id为店铺的id -->
           <img  v-for="(item, index) in allData.centralizedPurchasingSupplier" :key="index"
-                v-lazy="item.logo">
+                v-lazy="item.logo"
+                @click="onShopClick(item.id)">
         </div>
       </div>
     </section>
@@ -159,6 +161,13 @@
     </section>
 
     <sy-footer></sy-footer>
+
+    <div class="flex-btns">
+      <a href="http://chat8.live800.com/live800/chatClient/chatbox.jsp?companyID=927517&configID=152270&jid=2734404684">
+        <img class="kefu" src="~images/home-kefu.png">
+      </a>
+      <img class="top" src="~images/home-top.png" @click="top">
+    </div>
 
   </div>
 </template>
@@ -201,18 +210,45 @@ export default {
   },
 
   methods: {
-    // onSearchClick () {
-    //   this.$router.push({
-    //     name: 'goods-result',
-    //     query: {
-    //       msg: this.searchValue,
-    //       type: (this.searchIndex + 1)
-    //     }
-    //   })
-    // }
+    top () {
+      Tools.toTop(500)
+    },
     onGoodsClick (id) {
       this.$router.push({
         path: 'stock/detail',
+        query: {
+          id
+        }
+      })
+    },
+
+    toPurchase () {
+      this.$router.push({
+        path: '/purchase'
+      })
+    },
+
+    onShopClick (id) {
+      this.$router.push({
+        path: '/shop',
+        query: {
+          id
+        }
+      })
+    },
+
+    onServiceClick (id) {
+      this.$router.push({
+        path: '/techservice/detail',
+        query: {
+          id
+        }
+      })
+    },
+
+    onStarFormulaClick (id) {
+      this.$router.push({
+        path: '/producer/detail',
         query: {
           id
         }
@@ -256,22 +292,24 @@ export default {
         slidesPerView: 'auto',
         centeredSlides: true,
         autoplay: false,
+        observer: true,
+        observerParent: true,
         on: {
           progress: function (progress) {
             for (let i = 0; i < this.slides.length; i++) {
               let slide = this.slides.eq(i)
               // console.log(slide.css('width'))
-              let silideWidth = slide.css('width').replace(/px/, '')
+              // let silideWidth = slide.css('width').replace(/px/, '')
               let slideProgress = this.slides[i].progress
-              let modify = 1
-              if (Math.abs(slideProgress) > 1) {
-                modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
-              }
-              let translate = slideProgress * modify * (0.43 * silideWidth) + 'px'
+              // let modify = 1
+              // if (Math.abs(slideProgress) > 1) {
+              //   modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
+              // }
+              // let translate = slideProgress * modify * (0.43 * silideWidth) + 'px'
               // let translate = 0
               let scale = 1 - Math.abs(slideProgress) / 5
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
-              slide.transform('translateX(' + translate + ') scale(' + scale + ')')
+              // slide.transform('translateX(' + translate + ') scale(' + scale + ')')
               slide.css('zIndex', zIndex)
               slide.css('opacity', scale)
               if (Math.abs(slideProgress) >= 2) {
@@ -836,4 +874,20 @@ section{
   }
 }
 
+.flex-btns {
+  width: 0.8rem;
+  position: fixed;
+  right: .2rem;
+  bottom: 10%;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+
+  .kefu , .top {
+    width:.8rem;
+    height: 0.8rem;
+    margin-bottom: 0.2rem;
+    vertical-align: bottom;
+  }
+}
 </style>
