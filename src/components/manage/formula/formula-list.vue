@@ -3,27 +3,11 @@
     <back :title="'库存订单'"> </back>
     <div class="pager-header">
       <div class="flex-center" :class="activePager === 'tab0' ? 'active' : ''" @click="activePager = 'tab0'">待支付</div>
-      <div class="flex-center" :class="activePager === 'tab1' ? 'active' : ''" @click="activePager = 'tab1'">待发货</div>
-      <div class="flex-center" :class="activePager === 'tab2' ? 'active' : ''" @click="activePager = 'tab2'">待确认</div>
-      <div class="flex-center" :class="activePager === 'tab3' ? 'active' : ''" @click="activePager = 'tab3'">待收货</div>
+      <div class="flex-center" :class="activePager === 'tab1' ? 'active' : ''" @click="activePager = 'tab1'">待确认</div>
+      <div class="flex-center" :class="activePager === 'tab2' ? 'active' : ''" @click="activePager = 'tab2'">进行中</div>
+      <div class="flex-center" :class="activePager === 'tab3' ? 'active' : ''" @click="activePager = 'tab3'">已完成</div>
       <div class="flex-center" :class="activePager === 'tab4' ? 'active' : ''" @click="activePager = 'tab4'">全部</div>
     </div>
-    <!-- <mt-tab-container class="pager-body" v-model="activePager">
-      <mt-tab-container-item id="tab0">
-      </mt-tab-container-item>
-      <mt-tab-container-item id="tab1">
-        待发货
-      </mt-tab-container-item>
-      <mt-tab-container-item id="tab2">
-        待确认
-      </mt-tab-container-item>
-      <mt-tab-container-item id="tab3">
-        待收货
-      </mt-tab-container-item>
-      <mt-tab-container-item id="tab4">
-        全部
-      </mt-tab-container-item>
-    </mt-tab-container> -->
 
     <div class="item"
           v-for="(item, index) in orders" :key="index"
@@ -34,23 +18,11 @@
         <img src="~images/information-more.png" class="shop-detail">
       </div>
       <div class="content">
-        <img v-lazy="JSON.parse(item.content.imgs)[0]" class="left">
+        <img v-lazy="item.pic" class="left">
         <div class="center">
-          <p class="name">{{item.content.name}}</p>
-          <p>化学名称: {{item.content.chemicalCall}}</p>
-          <p>规格: {{`${item.spec.counts}${specs.unit[item.spec.unit].title} / ${specs.pack[item.spec.pack].title}`}}</p>
-        </div>
-        <div class="right">
-          <p class="price">¥{{item.content.price}}</p>
-          <p class="count">x{{item.detail.quantity}}</p>
-        </div>
-      </div>
-      <div class="bottom">
-        <div class="left">
-          商品编号:&nbsp;<span>{{item.content.code}}</span>
-        </div>
-        <div class="right">
-          合计:&nbsp;¥&nbsp;<span>{{item.content.price * item.detail.quantity}}</span>
+          <p class="name single-line">{{item.detail.goodsName}}</p>
+          <p>{{JSON.parse(item.content.extContent.content).teac.join('、')}}</p>
+          <p class="price">¥ {{item.detail.price}}</p>
         </div>
       </div>
     </div>
@@ -63,9 +35,8 @@
 import Back from 'comp/index/back'
 import NoData from 'comp/no-data'
 import {TabContainer, TabContainerItem} from 'mint-ui'
-import { OrderMgrService } from 'api/manage/stockorder-service'
-import { StockAdjustOrderStatus } from 'model/mgt-model'
-import { Specs } from 'model/model-types'
+import { FormulationOrderStatus } from 'model/mgt-model'
+import { OrderMgrService } from 'api/manage/formulaorder-service'
 
 export default {
   components: {
@@ -78,8 +49,7 @@ export default {
   data () {
     return {
       activePager: 'tab0',
-      orders: [],
-      specs: Specs
+      orders: []
     }
   },
 
@@ -89,7 +59,7 @@ export default {
     },
 
     stockStatus () {
-      return StockAdjustOrderStatus[this.activeTabIndex].val
+      return FormulationOrderStatus[this.activeTabIndex].val
     }
   },
 
@@ -105,14 +75,14 @@ export default {
       this.orderMgrService.list({
         start: 0,
         limit: 50,
-        orderType: 5,
-        stockAdjustStatus: this.stockStatus
+        orderType: 2,
+        formulationStatus: this.stockStatus
       }).then(res => {
         if (res) {
           this.orders = res.list.map(e => {
             e.detail = e.details[0]
             e.content = JSON.parse(e.detail.mirror.content)
-            e.spec = JSON.parse(e.content.extContent.content).spec
+            e.pic = e.content.imgs ? JSON.parse(e.content.imgs)[0] : ''
             return e
           })
 
@@ -123,9 +93,10 @@ export default {
 
     onItemClick (id) {
       this.$router.push({
-        path: '/manage/stock/detail',
+        path: '/manage/formula/detail',
         query: {
-          id
+          id,
+          type: 'formula'
         }
       })
     }
@@ -211,6 +182,7 @@ export default {
     }
 
     & > .center {
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
@@ -226,51 +198,13 @@ export default {
         font-size: 0.28rem;
         margin-bottom: 0.1rem;
       }
-    }
-
-    & > .right {
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      text-align: right;
 
       .price {
-        font-size: 0.28rem;
-        color:$text-red;
-        margin-bottom: 0.2rem;
+        color: $text-red;
       }
-
-      .count {
-        font-size: 0.24rem;
-        color: $text-french;
-      }
-
     }
+
   }
 
-  & > .bottom {
-    height: 0.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 .3rem;
-
-    .left {
-      color: $text-french;
-      font-size: 0.24rem;
-
-      span {
-        color: $text-black;
-      }
-    }
-
-    .right  {
-      font-size: 0.24rem;
-
-      & > span {
-        font-size: 0.26rem;
-      }
-    }
-  }
 }
 </style>

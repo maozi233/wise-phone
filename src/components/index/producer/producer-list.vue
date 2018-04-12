@@ -12,7 +12,7 @@
               <p class="company-name">{{item.dtManager.companyName}}</p>
             </div>
           </div>
-          <span class="btn-shop">进店</span>
+          <span class="btn-shop" @click="toShop(item.dtManager.id)">进店</span>
         </div>
 
         <div class="type">
@@ -58,6 +58,15 @@ export default {
     onProductClick (id) {
       this.$router.push({
         path: 'producer/detail',
+        query: {
+          id
+        }
+      })
+    },
+
+    toShop (id) {
+      this.$router.push({
+        path: '/shop',
         query: {
           id
         }

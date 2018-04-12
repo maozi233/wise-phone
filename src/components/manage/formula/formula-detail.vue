@@ -34,11 +34,10 @@
         <img src="~images/information-more.png" class="shop-detail">
       </div>
       <div class="content">
-        <img v-lazy="JSON.parse(detail.content.imgs)[0]" class="left">
+        <img v-lazy="detail.pic" class="left">
         <div class="center">
           <p class="name">{{detail.content.name}}</p>
-          <p>化学名称: {{detail.content.chemicalCall}}</p>
-          <p>规格: {{`${detail.spec.counts}${specs.unit[detail.spec.unit].title} / ${specs.pack[detail.spec.pack].title}`}}</p>
+          <p>技术服务: {{JSON.parse(detail.content.extContent.content).teac.join('、')}}</p>
         </div>
         <div class="right">
           <p class="price">¥{{detail.content.price}}</p>
@@ -68,8 +67,8 @@
 <script>
 import Back from 'comp/index/back'
 import NoData from 'comp/no-data'
-import { OrderMgrService } from 'api/manage/stockorder-service'
-import { StockAdjustOrderStatus } from 'model/mgt-model'
+import { OrderMgrService } from 'api/manage/formulaorder-service'
+import { FormulationOrderStatus } from 'model/mgt-model'
 import { Specs } from 'model/model-types'
 
 export default {
@@ -94,12 +93,13 @@ export default {
           if (res) {
             res.detail = res.details[0]
             res.content = JSON.parse(res.detail.mirror.content)
-            res.spec = JSON.parse(res.content.extContent.content).spec
+            // res.spec = JSON.parse(res.content.extContent.content).spec
             res.recipientAddress = `${res.province.name} ${res.city.name} ${res.county.name} ${res.address}`
+            res.pic = res.content.imgs ? JSON.parse(res.content.imgs)[0] : ''
             this.detail = res
-            // stockAdjustStatus 订单状态
-            this.status = StockAdjustOrderStatus.filter(e => {
-              return e.val === res.stockAdjustStatus + ''
+            // formulationStatus 订单状态
+            this.status = FormulationOrderStatus.filter(e => {
+              return e.val === res.formulationStatus + ''
             })[0].title
           }
         })

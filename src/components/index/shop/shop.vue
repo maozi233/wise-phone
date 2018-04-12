@@ -25,15 +25,15 @@
 
     <mt-tab-container class="pager-body" v-model="activePager">
         <mt-tab-container-item id="tab1">
-          <!-- <section class="banner swiper-container" v-if="banners.length > 0">
+          <section class="banner swiper-container" v-if="banners.length > 0">
             <div class="swiper-wrapper">
               <div  class="swiper-slide"
                     v-for="(item, index) in banners" :key="index">
-                <img :src="item" alt="">
+                <img :src="item.image" alt="">
               </div>
             </div>
             <div class="swiper-pagination"></div>
-          </section> -->
+          </section>
 
           <div class="recommend">
             <div  class="goods"
@@ -121,8 +121,8 @@ export default {
       shopId: '',
       detail: {},
       activePager: 'tab1',
-      // banners: [],
-      // banner: '',
+      banners: [],
+      banner: '',
       recommends: [],
       tags: [],
       activeTagId: '',
@@ -202,8 +202,24 @@ export default {
       }).then(res => {
         if (res) {
           this.shopDes = res.content ? JSON.parse(res.content.content) : ''
-          // TODO: 店铺简介是否和pc保持一致？
           console.log(this.shopDes)
+          // 店铺装修 会有 text pic banner 三种。目前保持和设计图一样只有banner
+          this.banners = this.shopDes.filter(e => {
+            return e.id === 'banner'
+          })
+          if (this.banners.length > 0) {
+            this.banners = this.banners[0].prop
+          }
+
+          this.$nextTick(() => {
+            this.banner = new Swiper('.banner', {
+              pagination: {
+                el: '.swiper-pagination',
+                type: 'bullets'
+              },
+              autoplay: true
+            })
+          })
         }
       })
     },
@@ -254,22 +270,10 @@ export default {
 
             vm.goodsProp = res.identityType
 
-            // vm.banners = res.certifications.map(e => {
-            //   return JSON.parse(e.document.content).imgs ? JSON.parse(e.document.content).imgs[0] : false
-            // }).filter(e => e)
-
             // TODO: 证书是否有多个？
             vm.imgZs = JSON.parse(res.user.extContent.content).imgs ? JSON.parse(res.user.extContent.content).imgs[0] : ''
 
             vm.$nextTick(() => {
-              vm.banner = new Swiper('.banner', {
-                pagination: {
-                  el: '.swiper-pagination',
-                  type: 'bullets'
-                },
-                autoplay: true
-              })
-
               // 获取tab1的推荐商品
               vm.goodsService.search({
                 start: 0,

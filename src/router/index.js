@@ -64,6 +64,10 @@ import MineList from '@/components/manage/mine-list'
 import MgtStock from '@/components/manage/stock/stock-order'
 import MgtStockList from '@/components/manage/stock/stock-list'
 import MgtStockDetail from '@/components/manage/stock/stock-detail'
+// 配方订单
+import MgtFormula from '@/components/manage/formula/formula-order'
+import MgtFormulaList from '@/components/manage/formula/formula-list'
+import MgtFormulaDetail from '@/components/manage/formula/formula-detail'
 
 Vue.use(Router)
 
@@ -225,6 +229,20 @@ export default new Router({
             {
               path: 'detail',
               component: MgtStockDetail
+            }
+          ]
+        },
+        {
+          path: 'formula',
+          component: MgtFormula,
+          children: [
+            {
+              path: '',
+              component: MgtFormulaList
+            },
+            {
+              path: 'detail',
+              component: MgtFormulaDetail
             }
           ]
         }

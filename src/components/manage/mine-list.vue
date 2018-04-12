@@ -38,7 +38,7 @@ export default {
       }, {
         title: '配方订单',
         img: icon2,
-        path: '/'
+        path: '/formula'
       }, {
         title: '我的关注',
         img: icon3,
@@ -91,6 +91,7 @@ export default {
     p {
       font-size: 0.3rem;
       flex-grow: 1;
+      text-align: left;
     }
 
     .right {
