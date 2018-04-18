@@ -42,15 +42,15 @@ export default {
       }, {
         title: '我的关注',
         img: icon3,
-        path: '/'
+        path: '/follow'
       }, {
         title: '地址管理',
         img: icon4,
-        path: '/'
+        path: '/address'
       }, {
         title: '投诉举报',
         img: icon5,
-        path: '/'
+        path: '/complain'
       }, {
         title: '意见反馈',
         img: icon6,

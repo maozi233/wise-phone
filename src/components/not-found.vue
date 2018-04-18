@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>404</h1>
+    <h1>{{msg}}</h1>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 export default {
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: '404'
     }
   }
 }

@@ -31,7 +31,6 @@
       <div class="top">
         <img src="~images/shop.png" class="shop-icon">
         <span>{{detail.dtManager.shopName}}</span>
-        <img src="~images/information-more.png" class="shop-detail">
       </div>
       <div class="content">
         <img v-lazy="JSON.parse(detail.content.imgs)[0]" class="left">
@@ -68,9 +67,11 @@
 <script>
 import Back from 'comp/index/back'
 import NoData from 'comp/no-data'
-import { OrderMgrService } from 'api/manage/stockorder-service'
-import { StockAdjustOrderStatus } from 'model/mgt-model'
+import { BuyerService } from 'api/manage/buyerorder-service'
+import { SupplierService } from 'api/manage/supplierorder-service'
+import { AdjustDetailStatus, roleType } from 'model/mgt-model'
 import { Specs } from 'model/model-types'
+import { Tools } from 'utils/tools'
 
 export default {
   components: {
@@ -98,9 +99,11 @@ export default {
             res.recipientAddress = `${res.province.name} ${res.city.name} ${res.county.name} ${res.address}`
             this.detail = res
             // stockAdjustStatus 订单状态
-            this.status = StockAdjustOrderStatus.filter(e => {
-              return e.val === res.stockAdjustStatus + ''
-            })[0].title
+            // this.status = StockAdjustOrderStatus.filter(e => {
+            //   return e.val === res.stockAdjustStatus + ''
+            // })[0].title
+
+            this.status = AdjustDetailStatus[res.stockAdjustStatus][Tools.getUser().sysRole.roleType]
           }
         })
     }
@@ -110,7 +113,11 @@ export default {
     next(vm => {
       vm.id = to.query.id
       // console.log(vm.id)
-      vm.orderMgrService = new OrderMgrService()
+      if (Tools.getRoleType() === roleType.Buyer) {
+        vm.orderMgrService = new BuyerService()
+      } else if (Tools.getRoleType() === roleType.Supplier) {
+        vm.orderMgrService = new SupplierService()
+      }
       vm.getOrderDetail()
     })
   }

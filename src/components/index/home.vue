@@ -61,7 +61,7 @@
         </mt-tab-container-item>
       </mt-tab-container>
       <div class="loadmore" @click="onLoadMoreClick">
-        <div v-show="!isLoadmore">
+        <div v-show="!isLoadmore" class="more-container">
           <span>查看更多</span>
           <img src="../../assets/images/more.png" >
         </div>
@@ -289,27 +289,25 @@ export default {
 
       this.starFormulaSwiper = new Swiper('.star-formula-container', {
         watchSlidesProgress: true,
-        slidesPerView: 'auto',
+        slidesPerView: 1.5,
         centeredSlides: true,
         autoplay: false,
-        observer: true,
-        observerParent: true,
         on: {
           progress: function (progress) {
             for (let i = 0; i < this.slides.length; i++) {
               let slide = this.slides.eq(i)
               // console.log(slide.css('width'))
-              // let silideWidth = slide.css('width').replace(/px/, '')
+              let silideWidth = slide.css('width').replace(/px/, '')
               let slideProgress = this.slides[i].progress
-              // let modify = 1
-              // if (Math.abs(slideProgress) > 1) {
-              //   modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
-              // }
-              // let translate = slideProgress * modify * (0.43 * silideWidth) + 'px'
+              let modify = 1
+              if (Math.abs(slideProgress) > 1) {
+                modify = (Math.abs(slideProgress) - 1) * 0.3 + 1
+              }
+              let translate = slideProgress * modify * (0.43 * silideWidth) + 'px'
               // let translate = 0
               let scale = 1 - Math.abs(slideProgress) / 5
               let zIndex = 999 - Math.abs(Math.round(10 * slideProgress))
-              // slide.transform('translateX(' + translate + ') scale(' + scale + ')')
+              slide.transform('translateX(' + translate + ') scale(' + scale + ')')
               slide.css('zIndex', zIndex)
               slide.css('opacity', scale)
               if (Math.abs(slideProgress) >= 2) {
@@ -498,7 +496,7 @@ export default {
     box-shadow: 0 0 .2rem #b7b7b7;
     overflow: hidden;
     height: 5.1rem;
-    width: 5rem;
+    width: 6rem;
     background: white;
 
     & > img{
@@ -647,6 +645,11 @@ section{
     display:flex;
     justify-content: center;
     align-items: center;
+
+    .loadmore {
+      display: flex;
+      align-items: center;
+    }
 
     span {
       margin-right: .1rem;

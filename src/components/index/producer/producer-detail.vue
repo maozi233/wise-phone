@@ -36,11 +36,11 @@
       </div>
     </div>
 
-    <review-entry :id="id" :shopId="shopId"></review-entry>
+    <review-entry v-if="id" :id="id" :shopId="shopId"></review-entry>
 
     <section v-if="detail">
       <div class="title">商品详情</div>
-      <div class="box" v-html="detail.content.content" style="font-size:.3rem;text-align: left;">
+      <div class="detail-box" v-html="detail.content.content" style="font-size:.3rem;text-align: left;">
       </div>
        <no-data v-show="detail.content.content === ''"></no-data>
     </section>
@@ -122,7 +122,7 @@ export default {
       this.$router.push({
         path: '/star-formula/detail',
         query: {
-          formulaId: id
+          id
         }
       })
     },
@@ -179,6 +179,17 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.detail-box{
+    font-size:.3rem;
+    overflow-x: auto;
+
+    img {
+      max-width: 100%;
+    }
+  }
+</style>
 
 <style lang="scss" scoped>
 @import '~scss/shotcut';

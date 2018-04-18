@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <sy-header ref="header"></sy-header>
+    <sy-header ref="header" :inputPlaceHolder="inputSmg"></sy-header>
     <div class="result-des">
       <p>全部结果<span>共{{this.goods.length}}个相关原料</span></p>
     </div>
@@ -143,7 +143,7 @@ export default {
         start: 0,
         limit: 1000,
         goodsProp: 1,
-        keyword: '',
+        keyword: this.inputSmg,
         cateId: this.filterCateId
       }).then(res => {
         if (res) {

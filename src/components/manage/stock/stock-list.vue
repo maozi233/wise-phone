@@ -63,9 +63,11 @@
 import Back from 'comp/index/back'
 import NoData from 'comp/no-data'
 import {TabContainer, TabContainerItem} from 'mint-ui'
-import { OrderMgrService } from 'api/manage/stockorder-service'
-import { StockAdjustOrderStatus } from 'model/mgt-model'
+import { BuyerService } from 'api/manage/buyerorder-service'
+import { SupplierService } from 'api/manage/supplierorder-service'
+import { StockAdjustOrderStatus, roleType } from 'model/mgt-model'
 import { Specs } from 'model/model-types'
+import { Tools } from 'utils/tools'
 
 export default {
   components: {
@@ -132,7 +134,11 @@ export default {
   },
 
   created () {
-    this.orderMgrService = new OrderMgrService()
+    if (Tools.getRoleType() === roleType.Buyer) {
+      this.orderMgrService = new BuyerService()
+    } else if (Tools.getRoleType() === roleType.Supplier) {
+      this.orderMgrService = new SupplierService()
+    }
   },
 
   mounted () {

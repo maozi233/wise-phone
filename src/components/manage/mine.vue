@@ -1,9 +1,7 @@
 <template>
   <div class="bg">
     <sy-header ref="header" :showSearch="false"></sy-header>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
+    <router-view></router-view>
   </div>
 </template>
 

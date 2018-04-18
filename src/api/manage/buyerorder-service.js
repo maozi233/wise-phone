@@ -2,7 +2,7 @@ import {BaseService} from 'api/base-service'
 import {HttpClient} from 'utils/http-client'
 import $ from 'jquery'
 
-export class OrderMgrService extends BaseService {
+export class BuyerService extends BaseService {
   constructor () {
     super('ClientOrder/')
   }

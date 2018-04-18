@@ -37,7 +37,7 @@
 
     <section v-if="detail">
       <div class="title">商品详情</div>
-      <div class="box" v-html="detail.content.content" style="font-size:.3rem;text-align: left;">
+      <div class="detailbox" v-html="detail.content.content" style="font-size:.3rem;text-align: left;">
       </div>
       <no-data v-show="detail.content.content === ''"></no-data>
     </section>
@@ -299,5 +299,14 @@ section {
 .flex-bottom{
   height: 1rem;
 }
+</style>
+<style lang="scss">
+.detail-box{
+    font-size:.3rem;
+    overflow-x: auto;
 
+    img {
+      max-width: 100%;
+    }
+  }
 </style>

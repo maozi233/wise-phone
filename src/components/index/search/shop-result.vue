@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <sy-header ref="header"></sy-header>
+    <sy-header ref="header" :inputPlaceHolder="inputSmg"></sy-header>
     <div class="result-des">
       <p>全部结果<span>共{{this.shops.length}}个相关店铺</span></p>
     </div>

@@ -9,7 +9,7 @@
       </p>
     </div>
 
-    <div class="content" v-html="detail.content.content"></div>
+    <div class="content" v-html="detail.content.content" style="font-size:.3rem;text-align: left;"></div>
     <no-data v-show="detail === ''"></no-data>
   </div>
 </template>

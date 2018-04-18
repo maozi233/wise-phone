@@ -23,6 +23,13 @@ export class Tools {
     return JSON.parse(localStorage.getItem(ENV.USER_KEY))
   }
 
+  static getRoleType () {
+    // Buyer: 2, // 采购商
+    //  Supplier: 3, // 供应商
+    // Formulators: 4 // 配方师
+    return this.getUser().sysRole.roleType
+  }
+
   static toTop (transition = 0) {
     $('html,body').animate({scrollTop: 0}, transition)
   }

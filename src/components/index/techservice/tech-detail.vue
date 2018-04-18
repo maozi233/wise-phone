@@ -17,11 +17,11 @@
       <no-data v-if="!detail"></no-data>
     </div>
 
-    <review-entry :id="id" :shopId="shopId"></review-entry>
+    <review-entry v-if="id" :id="id" :shopId="shopId"></review-entry>
 
     <section v-if="detail">
       <div class="title">商品详情</div>
-      <div class="box" v-html="detail.content.content" style="font-size:.3rem;text-align: left;">
+      <div class="detail-box" v-html="detail.content.content" style="font-size:.3rem;text-align: left;">
       </div>
        <no-data v-show="detail.content.content === ''"></no-data>
     </section>
@@ -200,4 +200,14 @@ section {
   padding: .2rem;
 }
 
+</style>
+<style lang="scss">
+.detail-box{
+    font-size:.3rem;
+    overflow-x: auto;
+
+    img {
+      max-width: 100%;
+    }
+  }
 </style>

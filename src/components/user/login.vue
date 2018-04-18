@@ -262,6 +262,10 @@ export default {
 <style lang="scss" scoped>
 @import '../../scss/shotcut.scss';
 
+// body {
+//   overflow: hidden;
+// }
+
 .img-container {
   position: relative;
   font-size: 0;
@@ -314,6 +318,7 @@ export default {
   bottom: 0;
   top: 4rem;
   width: 100%;
+  min-height: 80vh;
 
   .mint-tab-container {
     height: 100%;
@@ -379,7 +384,7 @@ export default {
   .btns{
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1.9rem;
+    margin-bottom: 1.7rem;
 
     span {
       color: $text-gray;

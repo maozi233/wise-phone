@@ -1,6 +1,6 @@
 <template>
   <div class="bg">
-    <sy-header ref="header"></sy-header>
+    <sy-header ref="header" :inputPlaceHolder="inputSmg"></sy-header>
     <div class="result-des">
       <p>全部结果<span>共{{this.goods.length}}个相关配方</span></p>
     </div>
@@ -37,16 +37,30 @@
           <div class="item" @click="filterType = 1" :class="filterType === 1 ? 'active' : ''">服务</div>
         </div>
         <div class="box" v-show="filterType === 0">
+          <div class="item"  @click="getFormulas(0, '')" :class="cateId === '' ? 'active' : ''">全部</div>
           <div  class="item"
-                @click="getFormulas(0, '')"
-                :class="filterCateId === '' ? 'active' : ''">不限</div>
+                v-for="(item, index) in filterData" :key="index"
+                @click="onCateClick(item)"
+                :class="cateId === item.name ? 'active' : ''">
+            {{item.name}}
+          </div>
+        </div>
+        <div class="box" id="child-box" v-show="filterType === 0">
+          <div  class="item"
+                v-for="(item, index) in activeFilterData" :key="index"
+                @click="getFormulas(0,item.name)"
+                :class="filterCateId === item.name ? 'active' : ''">
+            {{item.name === cateId ? '全部' : item.name}}
+          </div>
+        </div>
+        <!-- <div class="box" v-show="filterType === 0">
           <div  class="item"
                 v-for="(item, index) in filterData" :key="index"
                 @click="getFormulas(0,item.id)"
                 :class="filterCateId === item.id ? 'active' : ''">
             {{item.name}}
           </div>
-        </div>
+        </div> -->
         <div class="box" v-show="filterType === 1">
           <div  class="item"
                 v-for="(item, index) in filterTypeData" :key="index"
@@ -80,13 +94,18 @@ export default {
       filterType: 0,
       filterPopVisible: false,
       filterData: [],
+      cateId: '',
       filterCateId: '',
+      activeFilterData: [],
       filterTypeData: [{id: '', name: '不限'}, {id: '1', name: '在线支持'}, {id: '2', name: '电话支持'}, {id: '3', name: '人员外派'}],
       teac: ''
     }
   },
   methods: {
-    getGoods () {
+    onCateClick (item) {
+      this.cateId = item.name
+      this.activeFilterData = item.children.concat([])
+      this.activeFilterData.unshift({name: this.cateId})
     },
 
     // 点击过滤器
@@ -103,9 +122,14 @@ export default {
         this.filterPopVisible = false
       }
       if (type === -1) {
+        this.cateId = ''
         this.filterCateId = ''
         this.teac = ''
       } else if (type === 0) {
+        if (!id) {
+          this.cateId = id
+          this.activeFilterData = []
+        }
         this.filterCateId = id
       } else if (type === 1) {
         this.teac = id
@@ -114,7 +138,7 @@ export default {
         start: 0,
         limit: 1000,
         goodsProp: 2,
-        keyword: '',
+        keyword: this.inputSmg,
         cateId: this.filterCateId,
         teac: this.teac
       }).then(res => {
@@ -145,11 +169,11 @@ export default {
       })
     },
 
-    onItemClick (formulaId) {
+    onItemClick (id) {
       this.$router.push({
         path: 'star-formula/detail',
         query: {
-          formulaId
+          id
         }
       })
     }

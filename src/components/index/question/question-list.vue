@@ -218,6 +218,9 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  box-sizing: border-box;
+  height: 1.9rem;
+  overflow-y: auto;
 
   .tag {
     width: 21%;

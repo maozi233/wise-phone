@@ -1,7 +1,8 @@
 <template>
   <div class="back">
     <img src="~images/back.png" @click="goBack">
-    <span>{{title}}</span>
+    <span class="title">{{title}}</span>
+    <slot></slot>
   </div>
 </template>
 
@@ -39,7 +40,7 @@ export default {
     height: .28rem;
   }
 
-  & > span {
+  & > .title {
     flex-grow: 1;
     margin-left: -.3rem;
     font-size: .36rem;

@@ -5,16 +5,24 @@
     <div class="controll">
       <img class="logo" src="../../assets/images/sy-logo.png" @click="toHome()">
       <div class="btns">
-        <img src="../../assets/images/logon.png" alt="">
+        <img src="../../assets/images/logon.png" @click="clickLogin">
         <img src="../../assets/images/service.jpg" v-show="!serviceVisible" @click="serviceVisible = true">
         <img src="../../assets/images/sy-service.png" v-show="serviceVisible" @click="closeServicePop">
         <img src="../../assets/images/navbar.png" @click="clickNavBarBtn">
       </div>
     </div>
-    <img  class="search-bar"
-          src="../../assets/images/search-bar.png"
+    <div  class="search-bar"
           @click="searchbarVisible = true"
           v-show="showSearch">
+      <div class="container">
+        <div class="left">
+          <input type="text" :placeholder="inputMsg">
+        </div>
+        <button class="right flex-center">
+          <img src="~images/head-search.png">
+        </button>
+      </div>
+    </div>
   </header>
     <mt-popup class="navbar-container"
             v-model="navbarVisible"
@@ -108,7 +116,7 @@
               <div class="content">
                 <div  class="items single-line"
                       v-for="(item, index) in fomulaTypes" :key="index"
-                      @click="onTagClick(0, item.id)">
+                      @click="onTagClick(0, item.name)">
                   {{item.name}}
                 </div>
               </div>
@@ -209,6 +217,10 @@ export default {
     noMargin: {
       type: Boolean,
       default: false
+    },
+    inputPlaceHolder: {
+      type: String,
+      default: '请输入你要搜索的商品名称'
     }
   },
 
@@ -238,7 +250,8 @@ export default {
         goods: '',
         formula: '',
         shop: ''
-      }
+      },
+      inputMsg: '请输入你要搜索的商品名称'
     }
   },
 
@@ -278,6 +291,12 @@ export default {
     toMessage () {
       this.$router.push({
         path: '/message'
+      })
+    },
+
+    clickLogin () {
+      this.$router.push({
+        path: '/login'
       })
     },
 
@@ -413,6 +432,9 @@ export default {
   watch: {
     serviceVisible () {
       document.body.style.overflow = this.serviceVisible ? 'hidden' : 'auto'
+    },
+    inputPlaceHolder () {
+      this.inputMsg = this.inputPlaceHolder
     }
   },
 
@@ -467,6 +489,42 @@ export default {
     padding-bottom: .2rem;
     width: 6.9rem;
     height: .8rem;
+
+    & > .container {
+      width: 100%;
+      height: 100%;
+      border: 1px solid $text-green;
+      border-radius: 4px;
+      display: flex;
+      overflow: hidden;
+      box-sizing: border-box;
+
+      & > .left {
+        flex-grow: 1;
+
+        input {
+          width: 100%;
+          height: 100%;
+          font-size: 0.24rem;
+          color: $text-french;
+          text-indent: 1em;
+          vertical-align: top;
+        }
+      }
+
+      & > .right {
+        flex-shrink: 0;
+        width: 1rem;
+        height: 100%;
+        background-color: $text-green;
+        border-radius: 0;
+
+        img {
+          width: 0.44rem;
+          height: 0.44rem;
+        }
+      }
+    }
   }
 }
 

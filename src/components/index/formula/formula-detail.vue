@@ -19,11 +19,11 @@
       </div>
     </div>
 
-    <review-entry :id.sync="formulaId" :shopId="shopId"></review-entry>
+    <review-entry v-if="formulaId" :id="formulaId" :shopId="shopId"></review-entry>
 
     <section v-if="detail">
       <div class="title">商品详情</div>
-      <div class="box" v-html="detail.content.content">
+      <div class="detail-box" v-html="detail.content.content">
       </div>
       <no-data v-show="detail.content.content === ''"></no-data>
     </section>
@@ -100,6 +100,7 @@ import { Toast } from 'mint-ui'
 import ReviewEntry from 'comp/index/review-entry'
 import { GoodsService } from 'api/index/goods-service'
 import { InquiryService } from 'api/index/inquiry-service'
+import { Reg } from 'utils/validator'
 
 export default {
   components: {
@@ -137,6 +138,10 @@ export default {
       if (!this.concatForm.name || !this.concatForm.tel || !this.concatForm.des) {
         return Toast('信息未填写完整')
       }
+
+      if (!Reg.phone.test(this.concatForm.tel)) {
+        return Toast('请填写正确的手机号')
+      }
       this.$refs.flexPop.hide()
       this.inquiryService.add({
         type: 1,
@@ -167,7 +172,7 @@ export default {
 
   beforeRouteEnter: (to, from, next) => {
     next((vm) => {
-      vm.formulaId = to.query.formulaId || ''
+      vm.formulaId = to.query.id || ''
 
       vm.goodsService.get({
         id: vm.formulaId
@@ -191,6 +196,17 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.detail-box{
+    font-size:.3rem;
+    overflow-x: auto;
+
+    img {
+      max-width: 100%;
+    }
+  }
+</style>
 
 <style lang="scss" scoped>
 @import '~scss/shotcut';
@@ -286,12 +302,6 @@ section {
     display: flex;
     align-items: center;
     font-size: .28rem;
-  }
-
-  .box{
-    font-size:.3rem;
-    // text-align: left;
-    overflow-x: auto;
   }
 }
 

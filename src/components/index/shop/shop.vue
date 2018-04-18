@@ -13,7 +13,11 @@
       <span class="favorite flex-center" @click="onFavoriteClick">{{detail.favorite ? '取消关注' : '关注店铺'}} </span>
     </div>
     <div class="nav">
-      <img class="search" src="~images/shop-search.png" @click="searchVisible = true">
+      <!-- <img class="search" src="~images/shop-search.png" @click="searchVisible = true"> -->
+      <div class="search" @click="searchVisible = true">
+        <img src="~images/shop-search.png">
+        <p>{{keyword || '搜索'}}</p>
+      </div>
       <span class="btn-home" @click="onClickPager(1)" :class="activePager === 'tab1' ? 'active' : '' ">首页</span>
       <span class="btn-type flex-center" @click="onClickPager(2)" :class="activePager === 'tab2' ? 'active' : '' ">
         分类
@@ -404,6 +408,21 @@ export default {
     width: 1.6rem;
     height: 0.6rem;
     margin-right: 0.45rem;
+    overflow: hidden;
+    font-size: 0.3rem;
+    color: $text-french;
+    display: flex;
+    align-items: center;
+    background: #e8e8e8;
+    border-radius: 1rem;
+    padding: 0 .2rem;
+    box-sizing: border-box;
+
+    img {
+      width: 0.26rem;
+      height: 0.26rem;
+      margin-right: .1rem;
+    }
   }
 
   span {

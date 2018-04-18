@@ -8,14 +8,26 @@
       <p class="name">{{detail.title}}</p>
       <p class="time">{{detail.lastModifyTime}}</p>
     </div>
-    <div class="content" v-html="detail.content.content" style="font-size:.3rem;text-align: left;"></div>
+    <div class="content" ref="content" v-html="detail.content.content" style="font-size:.3rem;text-align: left;"></div>
+
+    <mt-popup
+              v-model="popVisible"
+              position="center"
+              class="pop-filter">
+      <img :src="imgUrl">
+    </mt-popup>
   </div>
 </template>
 
 <script>
 import { HelpCenterService } from 'api/index/help-service'
+import { Popup } from 'mint-ui'
 
 export default {
+  components: {
+    Popup
+  },
+
   data () {
     return {
       id: '',
@@ -25,7 +37,15 @@ export default {
         content: {
           content: ''
         }
-      }
+      },
+      popVisible: false,
+      imgUrl: ''
+    }
+  },
+
+  watch: {
+    popVisible () {
+      document.body.style.overflow = this.popVisible ? 'hidden' : 'auto'
     }
   },
 
@@ -46,9 +66,22 @@ export default {
           if (res) {
             vm.detail = res
             // console.log(vm.detail)
+
+            vm.$nextTick(() => {
+              let img = vm.$refs.content.getElementsByTagName('img')[0]
+              console.log(img)
+              img.onclick = function () {
+                vm.imgUrl = img.currentSrc
+                vm.popVisible = true
+              }
+            })
           }
         })
     })
+  },
+
+  beforeDestroy () {
+    document.body.style.overflow = 'auto'
   }
 }
 </script>
@@ -97,8 +130,21 @@ export default {
   }
 }
 
-.content {
+</style>
+<style lang="scss">
+.content{
   background: white;
   padding: .2rem .3rem;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.mint-popup {
+  padding: .2rem;
+  background: black;
+  width: 100%;
+  overflow: auto;
 }
 </style>

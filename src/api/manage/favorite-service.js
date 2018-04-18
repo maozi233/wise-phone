@@ -2,9 +2,9 @@ import {BaseService} from 'api/base-service'
 import {HttpClient} from 'utils/http-client'
 import $ from 'jquery'
 
-export class OrderMgrService extends BaseService {
+export class FavoriteService extends BaseService {
   constructor () {
-    super('mgr/Order/')
+    super('ClientFavorite/')
   }
 
   list (params) {
@@ -13,7 +13,9 @@ export class OrderMgrService extends BaseService {
     return HttpClient.get(`${this.apiContext}list?${str}`)
   }
 
-  byId (id) {
-    return HttpClient.get(`${this.apiContext}byId?id=${id}`)
+  delete (params) {
+    return HttpClient.destroy(`${this.apiContext}delete?`, {
+      body: params
+    })
   }
 }

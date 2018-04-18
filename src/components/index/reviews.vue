@@ -12,6 +12,9 @@
         <p class="name">{{item.realName}}</p>
         <p class="time">{{item.createTime}}</p>
         <p class="comment">{{item.text}}</p>
+        <div class="pr" v-if="item.pr">
+          <p>卖家回复：{{item.pr.text}}</p>
+        </div>
       </div>
     </div>
 
@@ -134,6 +137,18 @@ export default {
       padding: .2rem 0;
       font-size: .24rem;
       line-height: .4rem;
+    }
+
+    .pr {
+      padding: .2rem;
+      background: #eee;
+      color: $text-french;
+      font-size: 0.3rem;
+      margin-bottom: 0.3rem;
+
+      & > p {
+        word-wrap: break-word;
+      }
     }
   }
 }

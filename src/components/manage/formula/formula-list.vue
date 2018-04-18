@@ -1,6 +1,6 @@
 <template>
   <div>
-    <back :title="'库存订单'"> </back>
+    <back :title="'配方订单'"> </back>
     <div class="pager-header">
       <div class="flex-center" :class="activePager === 'tab0' ? 'active' : ''" @click="activePager = 'tab0'">待支付</div>
       <div class="flex-center" :class="activePager === 'tab1' ? 'active' : ''" @click="activePager = 'tab1'">待确认</div>
@@ -35,8 +35,10 @@
 import Back from 'comp/index/back'
 import NoData from 'comp/no-data'
 import {TabContainer, TabContainerItem} from 'mint-ui'
-import { FormulationOrderStatus } from 'model/mgt-model'
-import { OrderMgrService } from 'api/manage/formulaorder-service'
+import { FormulationOrderStatus, roleType } from 'model/mgt-model'
+import { BuyerService } from 'api/manage/buyerorder-service'
+import { SupplierService } from 'api/manage/supplierorder-service'
+import { Tools } from 'utils/tools'
 
 export default {
   components: {
@@ -103,7 +105,11 @@ export default {
   },
 
   created () {
-    this.orderMgrService = new OrderMgrService()
+    if (Tools.getRoleType() === roleType.Buyer) {
+      this.orderMgrService = new BuyerService()
+    } else if (Tools.getRoleType() === roleType.Supplier) {
+      this.orderMgrService = new SupplierService()
+    }
   },
 
   mounted () {
