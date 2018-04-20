@@ -18,6 +18,8 @@
           <p class="price">{{item.price}}</p>
         </div>
       </div>
+      <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="goods.length > 0"></load-more>
+      <no-data v-show="goods.length === 0"></no-data>
     </div>
     <sy-footer></sy-footer>
 
@@ -78,13 +80,16 @@
 import Header from 'comp/index/header'
 import Footer from 'comp/index/footer'
 import NoData from 'comp/no-data'
+import LoadMore from 'comp/loadmore'
 import {GoodsResultService} from 'api/index/result/goods-result-service'
+import { PageModel } from 'model/page-model'
 
 export default {
   components: {
     [Header.name]: Header,
     [Footer.name]: Footer,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
@@ -98,7 +103,8 @@ export default {
       filterCateId: '',
       activeFilterData: [],
       filterTypeData: [{id: '', name: '不限'}, {id: '1', name: '在线支持'}, {id: '2', name: '电话支持'}, {id: '3', name: '人员外派'}],
-      teac: ''
+      teac: '',
+      pager: new PageModel()
     }
   },
   methods: {
@@ -136,7 +142,7 @@ export default {
       }
       this.goodsResultService.search({
         start: 0,
-        limit: 1000,
+        limit: 10,
         goodsProp: 2,
         keyword: this.inputSmg,
         cateId: this.filterCateId,
@@ -148,6 +154,8 @@ export default {
               exContent: item.extContent.content ? JSON.parse(item.extContent.content) : ''
             })
           })
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
     },
@@ -155,7 +163,7 @@ export default {
     getGoodsFromKeyWord () {
       this.goodsResultService.search({
         start: 0,
-        limit: 50,
+        limit: 10,
         goodsProp: 2,
         keyword: this.inputSmg
       }).then(res => {
@@ -165,6 +173,8 @@ export default {
               exContent: item.extContent.content ? JSON.parse(item.extContent.content) : ''
             })
           })
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
     },
@@ -176,6 +186,33 @@ export default {
           id
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.goodsResultService.search({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          goodsProp: 2,
+          keyword: this.inputSmg,
+          cateId: this.filterCateId,
+          teac: this.teac
+        }).then(res => {
+          if (res) {
+            res.list.map(item => {
+              return Object.assign(item, {
+                exContent: item.extContent.content ? JSON.parse(item.extContent.content) : ''
+              })
+            }).forEach(e => {
+              this.goods.push(e)
+            })
+            this.$refs.pageloader.close()
+          }
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     }
   },
 

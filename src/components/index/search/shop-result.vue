@@ -35,6 +35,10 @@
         </div>
       </div>
     </div>
+
+    <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="shops.length > 0"></load-more>
+    <no-data v-show="shops.length === 0"></no-data>
+
     <sy-footer></sy-footer>
   </div>
 
@@ -44,19 +48,23 @@ import Header from 'comp/index/header'
 import Footer from 'comp/index/footer'
 import NoData from 'comp/no-data'
 import { ShopResultService } from 'api/index/shop-service'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 
 export default {
   components: {
     [Header.name]: Header,
     [Footer.name]: Footer,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
     return {
       inputSmg: '',
       shops: [],
-      companyTypes: ['', '工厂型', '贸易型', '试剂型', '定制型']
+      companyTypes: ['', '工厂型', '贸易型', '试剂型', '定制型'],
+      pager: new PageModel()
     }
   },
   methods: {
@@ -84,7 +92,7 @@ export default {
     getShopsFromKeyWord () {
       this.shopService.search({
         start: 0,
-        limit: 100,
+        limit: 10,
         keyword: this.inputSmg
       }).then(res => {
         if (res) {
@@ -101,8 +109,41 @@ export default {
             }
             return e
           })
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.shopService.search({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          keyword: this.inputSmg
+        }).then(res => {
+          if (res) {
+            res.list.map(e => {
+              if (e.goodsList) {
+                e.goodsList.map(v => {
+                  v.goodslogo = JSON.parse(v.imgs)[0]
+                  return v
+                })
+
+                // 最多只需要3个
+                e.goodsList.length = e.goodsList.length > 3 ? 3 : e.goodsList.length
+              }
+              return e
+            }).forEach(e => {
+              this.shops.push(e)
+            })
+            this.$refs.pageloader.close()
+          }
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     }
   },
 

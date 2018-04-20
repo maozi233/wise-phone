@@ -4,9 +4,9 @@
     <div class="list">
       <div class="item"
             v-for="(item, index) in infos" :key="index">
-        <router-link :to="`/manage${item.path}`">
+        <router-link :to="`/manage${item.path}`" v-if="!item.roleTypes.length || item.roleTypes.indexOf(roleType) != -1">
           <img :src="item.img" class="left">
-          <p>{{item.title}}</p>
+          <p>{{item.title}} {{`${!item.roleTypes.length} || ${item.roleTypes.indexOf(roleType) != -1}`}}</p>
           <img src="~images/information-more.png" class="right">
         </router-link>
       </div>
@@ -23,6 +23,7 @@ import icon4 from 'images/mine-icon4.png'
 import icon5 from 'images/mine-icon5.png'
 import icon6 from 'images/mine-icon6.png'
 import icon7 from 'images/mine-icon7.png'
+import { Tools } from 'utils/tools'
 
 export default {
   components: {
@@ -34,32 +35,40 @@ export default {
       infos: [{
         title: '库存订单',
         img: icon1,
-        path: '/stock'
+        path: '/stock',
+        roleTypes: [2, 3]
       }, {
         title: '配方订单',
         img: icon2,
-        path: '/formula'
+        path: '/formula',
+        roleTypes: [2, 4]
       }, {
         title: '我的关注',
         img: icon3,
-        path: '/follow'
+        path: '/follow',
+        roleTypes: []
       }, {
         title: '地址管理',
         img: icon4,
-        path: '/address'
+        path: '/address',
+        roleTypes: []
       }, {
         title: '投诉举报',
         img: icon5,
-        path: '/complain'
+        path: '/complain',
+        roleTypes: []
       }, {
         title: '意见反馈',
         img: icon6,
-        path: '/'
+        path: '/',
+        roleTypes: []
       }, {
         title: '集采确认',
         img: icon7,
-        path: '/'
-      }]
+        path: '/',
+        roleTypes: []
+      }],
+      roleType: Tools.getRoleType()
     }
   },
 

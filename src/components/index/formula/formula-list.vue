@@ -30,7 +30,8 @@
           <p class="des single-line">{{item.subject}}</p>
           <p class="money">{{item.price}}</p>
         </div>
-        <div v-show="formulas.length === 0">暂无数据</div>
+        <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="formulas.length > 0"></load-more>
+        <no-data v-show="formulas.length === 0"></no-data>
       </div>
     </section>
 
@@ -95,15 +96,20 @@ import Footer from 'comp/index/footer'
 import { Popup } from 'mint-ui'
 import { FormulaService } from 'api/index/formula-service'
 import { GoodsService } from 'api/index/goods-service'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
+import NoData from 'comp/no-data'
 
 // 配方师
 const RECOMMEND_TYPE = 2
-
+console.log(LoadMore)
 export default {
   components: {
     [Header.name]: Header,
     [Footer.name]: Footer,
-    Popup
+    Popup,
+    LoadMore,
+    NoData
   },
   data () {
     return {
@@ -116,7 +122,8 @@ export default {
       filterCateId: '',
       filterTypeData: [{id: '', name: '不限'}, {id: '1', name: '在线支持'}, {id: '2', name: '电话支持'}, {id: '3', name: '人员外派'}],
       teac: '',
-      filterPopVisible: false
+      filterPopVisible: false,
+      pager: new PageModel()
     }
   },
 
@@ -149,7 +156,7 @@ export default {
       }
       this.goodsService.search({
         start: 0,
-        limit: 1000,
+        limit: 10,
         goodsProp: 2,
         keyword: '',
         cateId: this.filterCateId,
@@ -158,6 +165,8 @@ export default {
         if (res) {
           // console.log(res)
           this.formulas = res.list
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
     },
@@ -178,6 +187,31 @@ export default {
       // 为空时去拿一次明星配方的tag数据
       if (this.filterData.length === 0) {
         this.filterData = this.$store.state.formulaTagsCache
+      }
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.goodsService.search({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          goodsProp: 2,
+          keyword: '',
+          cateId: this.filterCateId,
+          teac: this.teac
+        }).then(res => {
+          if (res) {
+            console.log(res)
+            // this.formulas.concat()
+            res.list.forEach(e => {
+              this.formulas.push(e)
+            })
+            this.$refs.pageloader.close()
+          }
+        })
+      } else {
+        this.$refs.pageloader.close()
       }
     }
   },

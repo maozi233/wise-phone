@@ -12,6 +12,7 @@
         <img src="~images/information-more.png" class="right">
       </div>
     </div>
+    <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="infos.length > 0"></load-more>
     <no-data v-if="infos.length === 0"></no-data>
   </div>
 </template>
@@ -19,15 +20,19 @@
 <script>
 import NoData from 'comp/no-data'
 import { InformationService } from 'api/index/information-service'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 
 export default {
   components: {
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
     return {
-      infos: []
+      infos: [],
+      pager: new PageModel()
     }
   },
 
@@ -39,6 +44,25 @@ export default {
           id
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.informationService.list({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize
+        }).then(res => {
+          if (res) {
+            res.list.forEach(e => {
+              this.infos.push(e)
+            })
+          }
+          this.$refs.pageloader.close()
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     }
   },
 
@@ -49,10 +73,12 @@ export default {
   mounted () {
     this.informationService.list({
       start: 0,
-      limit: 20
+      limit: 10
     }).then(res => {
       if (res) {
         this.infos = res.list
+        this.pager.reset()
+        this.pager.setTotal(res.total)
       }
     })
   }

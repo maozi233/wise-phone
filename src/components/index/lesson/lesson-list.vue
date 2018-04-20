@@ -14,6 +14,8 @@
         <p class="price">{{item.price}}</p>
       </div>
     </div>
+    <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="vedios.length > 0"></load-more>
+    <no-data v-show="vedios.length === 0"></no-data>
     <sy-footer></sy-footer>
   </div>
 </template>
@@ -23,17 +25,21 @@ import Header from 'comp/index/header'
 import Footer from 'comp/index/footer'
 import NoData from 'comp/no-data'
 import { OpenCourseService } from 'api/index/oepncourse-service'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 
 export default {
   components: {
     [Header.name]: Header,
     [Footer.name]: Footer,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
     return {
-      vedios: []
+      vedios: [],
+      pager: new PageModel()
     }
   },
 
@@ -45,6 +51,25 @@ export default {
           id
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.openCourseService.list({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize
+        }).then(res => {
+          if (res) {
+            res.list.forEach(e => {
+              this.vedios.push(e)
+            })
+            this.$refs.pageloader.close()
+          }
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     }
   },
 
@@ -55,10 +80,12 @@ export default {
   mounted () {
     this.openCourseService.list({
       start: 0,
-      limit: 100
+      limit: 10
     }).then(res => {
       if (res) {
         this.vedios = res.list
+        this.pager.reset()
+        this.pager.setTotal(res.total)
       }
     })
   }

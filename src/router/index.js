@@ -70,8 +70,6 @@ import MgtFormulaList from '@/components/manage/formula/formula-list'
 import MgtFormulaDetail from '@/components/manage/formula/formula-detail'
 // 我的关注
 import MgtFollow from '@/components/manage/follow/follow'
-// 投诉举报
-import MgtComplain from '@/components/manage/complain/complain'
 // 地址管理
 import MgtAddress from '@/components/manage/address/address'
 import MgtAddressList from '@/components/manage/address/address-list'
@@ -271,10 +269,6 @@ export default new Router({
         {
           path: 'follow',
           component: MgtFollow
-        },
-        {
-          path: 'complain',
-          component: MgtComplain
         }
       ]
     },

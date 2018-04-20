@@ -7,19 +7,19 @@
     <div class="result-detail">
       <p>
         <span>化学名</span>
-        <span>{{fristItem ? fristItem.chemicalCall : ''}}</span>
+        <span>{{fristItem ? fristItem.chemicalCall : 'N/A'}}</span>
       </p>
       <p>
         <span>CAS号</span>
-        <span>{{fristItem ? fristItem.casNo : ''}}</span>
+        <span>{{fristItem ? fristItem.casNo : 'N/A'}}</span>
       </p>
       <p>
         <span>INCI名</span>
-        <span>{{fristItem ? fristItem.chemicalName : ''}}</span>
+        <span>{{fristItem ? fristItem.chemicalName : 'N/A'}}</span>
       </p>
       <p>
         <span>别名</span>
-        <span>{{fristItem ? fristItem.name : ''}}</span>
+        <span>{{fristItem ? fristItem.name : 'N/A'}}</span>
       </p>
     </div>
 
@@ -46,6 +46,7 @@
         </div>
         <no-data v-show="goods.length === 0"></no-data>
       </div>
+      <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="goods.length > 0"></load-more>
     </div>
     <sy-footer></sy-footer>
 
@@ -84,12 +85,15 @@ import Footer from 'comp/index/footer'
 import NoData from 'comp/no-data'
 import {GoodsResultService} from 'api/index/result/goods-result-service'
 import { Specs } from 'model/model-types'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 
 export default {
   components: {
     [Header.name]: Header,
     [Footer.name]: Footer,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
@@ -102,14 +106,15 @@ export default {
       filterPopVisible: false,
       filterData: [],
       filterCateId: '',
-      teac: ''
+      teac: '',
+      pager: new PageModel()
     }
   },
   methods: {
     getGoodsFromKeyWord () {
       this.goodsResultService.search({
         start: 0,
-        limit: 50,
+        limit: 10,
         goodsProp: 1,
         keyword: this.inputSmg
       }).then(res => {
@@ -121,6 +126,8 @@ export default {
           })
 
           this.fristItem = this.goods[0]
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
     },
@@ -141,7 +148,7 @@ export default {
       this.filterCateId = id
       this.goodsResultService.search({
         start: 0,
-        limit: 1000,
+        limit: 10,
         goodsProp: 1,
         keyword: this.inputSmg,
         cateId: this.filterCateId
@@ -154,8 +161,36 @@ export default {
           })
 
           this.fristItem = this.goods[0]
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.goodsResultService.search({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          goodsProp: 1,
+          keyword: this.inputSmg,
+          cateId: this.filterCateId
+        }).then(res => {
+          if (res) {
+            res.list.map(item => {
+              return Object.assign(item, {
+                exContent: item.extContent.content ? JSON.parse(item.extContent.content) : ''
+              })
+            }).forEach(e => {
+              this.goods.push(e)
+            })
+          }
+          this.$refs.pageloader.close()
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     },
 
     // 点击过滤器

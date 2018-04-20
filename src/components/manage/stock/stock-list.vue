@@ -34,11 +34,11 @@
         <img src="~images/information-more.png" class="shop-detail">
       </div>
       <div class="content">
-        <img v-lazy="JSON.parse(item.content.imgs)[0]" class="left">
+        <img v-lazy="item.content.imgs ? JSON.parse(item.content.imgs)[0]: ''" class="left">
         <div class="center">
           <p class="name">{{item.content.name}}</p>
           <p>化学名称: {{item.content.chemicalCall}}</p>
-          <p>规格: {{`${item.spec.counts}${specs.unit[item.spec.unit].title} / ${specs.pack[item.spec.pack].title}`}}</p>
+          <p>规格: <span v-if="item.spec">{{`${item.spec.counts}${specs.unit[item.spec.unit].title} / ${specs.pack[item.spec.pack].title}`}}</span> <span v-if="!item.spec">N/A</span></p>
         </div>
         <div class="right">
           <p class="price">¥{{item.content.price}}</p>
@@ -55,7 +55,8 @@
       </div>
     </div>
 
-     <no-data v-show="!orders.length"></no-data>
+    <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="orders.length > 0"></load-more>
+    <no-data v-show="orders.length === 0"></no-data>
   </div>
 </template>
 
@@ -64,24 +65,28 @@ import Back from 'comp/index/back'
 import NoData from 'comp/no-data'
 import {TabContainer, TabContainerItem} from 'mint-ui'
 import { BuyerService } from 'api/manage/buyerorder-service'
-import { SupplierService } from 'api/manage/supplierorder-service'
+import { MgrService } from 'api/manage/mgrorder-service'
 import { StockAdjustOrderStatus, roleType } from 'model/mgt-model'
 import { Specs } from 'model/model-types'
 import { Tools } from 'utils/tools'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 
 export default {
   components: {
     TabContainer,
     TabContainerItem,
     Back,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
     return {
       activePager: 'tab0',
       orders: [],
-      specs: Specs
+      specs: Specs,
+      pager: new PageModel()
     }
   },
 
@@ -106,7 +111,7 @@ export default {
     getStockOrders () {
       this.orderMgrService.list({
         start: 0,
-        limit: 50,
+        limit: 10,
         orderType: 5,
         stockAdjustStatus: this.stockStatus
       }).then(res => {
@@ -114,13 +119,43 @@ export default {
           this.orders = res.list.map(e => {
             e.detail = e.details[0]
             e.content = JSON.parse(e.detail.mirror.content)
-            e.spec = JSON.parse(e.content.extContent.content).spec
+            e.spec = e.content.extContent.content ? JSON.parse(e.content.extContent.content).spec : ''
             return e
           })
+          this.pager.reset()
+          this.pager.setTotal(res.total)
 
           console.log(this.orders)
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.orderMgrService.list({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          orderType: 5,
+          stockAdjustStatus: this.stockStatus
+        }).then(res => {
+          if (res) {
+            res.list.map(e => {
+              e.detail = e.details[0]
+              e.content = JSON.parse(e.detail.mirror.content)
+              // e.spec = ''
+              e.spec = e.content.extContent.content ? JSON.parse(e.content.extContent.content).spec : ''
+              return e
+            }).forEach(e => {
+              console.log(e)
+              this.orders.push(e)
+            })
+          }
+          this.$refs.pageloader.close()
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     },
 
     onItemClick (id) {
@@ -137,7 +172,7 @@ export default {
     if (Tools.getRoleType() === roleType.Buyer) {
       this.orderMgrService = new BuyerService()
     } else if (Tools.getRoleType() === roleType.Supplier) {
-      this.orderMgrService = new SupplierService()
+      this.orderMgrService = new MgrService()
     }
   },
 

@@ -2,13 +2,20 @@
   <div>
     <sy-header ref="header"></sy-header>
 
-    <div class="tags">
+    <div class="tags"
+        :style="{maxHeight: pullDownActive ? '10rem' : '1.9rem'}">
       <span class="tag flex-center single-line"
             v-for="(item, index) in tags" :key="index"
             @click="onClickTag(item.tagName)"
             :class="activeTagName === item.tagName ? 'active' : ''">
         {{item.tagName}}
       </span>
+    </div>
+    <div  class="flex-center tags-pulldown"
+          @click="onPullDownClick"
+          v-show="tags.length > 8"
+          :class="pullDownActive ? 'active' : ''">
+      <img src="~images/filter.png" >
     </div>
 
     <div class="list">
@@ -21,6 +28,8 @@
       </div>
       <no-data v-if="questions.length === 0"></no-data>
     </div>
+
+    <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="questions.length > 0"></load-more>
 
     <flex-popup ref="flexPop">
       <p class="title">发布问题</p>
@@ -44,13 +53,16 @@ import FlexPopup from 'comp/index/flex-popup'
 import NoData from 'comp/no-data'
 import { Toast } from 'mint-ui'
 import { QuestionService } from 'api/index/question-service'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 
 export default {
   components: {
     [Header.name]: Header,
     FlexBottom,
     FlexPopup,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
@@ -61,7 +73,9 @@ export default {
         des: ''
       },
       tags: [],
-      activeTagName: ''
+      activeTagName: '',
+      pager: new PageModel(),
+      pullDownActive: false
     }
   },
 
@@ -96,13 +110,35 @@ export default {
     getQesList (tagName = '') {
       this.questionService.search({
         start: 0,
-        limit: 50,
+        limit: 10,
         tagName
       }).then(res => {
         if (res) {
           this.questions = res.list
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.questionService.search({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          tagName: this.activeTagName
+        }).then(res => {
+          if (res) {
+            res.list.forEach(e => {
+              this.questions.push(e)
+            })
+          }
+          this.$refs.pageloader.close()
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     },
 
     getTags () {
@@ -116,6 +152,10 @@ export default {
 
     onClickTag (tagName) {
       this.getQesList(this.activeTagName = tagName)
+    },
+
+    onPullDownClick () {
+      this.pullDownActive = !this.pullDownActive
     }
   },
 
@@ -213,14 +253,14 @@ export default {
 .tags {
   background: white;
   margin-top: 0.2rem;
-  margin-bottom: 0.2rem;
   padding: .3rem .3rem .1rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   box-sizing: border-box;
-  height: 1.9rem;
+  max-height: 1.9rem;
   overflow-y: auto;
+  transition: .3s all ;
 
   .tag {
     width: 21%;
@@ -241,6 +281,16 @@ export default {
     &:last-child(1) {
       margin-left:0;
     }
+  }
+}
+
+.tags-pulldown {
+  height: .6rem;
+  background: white;
+  margin-bottom: 0.2rem;
+
+  &.active img{
+    transform: rotateZ(180deg);
   }
 }
 </style>

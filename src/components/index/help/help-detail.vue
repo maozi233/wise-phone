@@ -68,12 +68,13 @@ export default {
             // console.log(vm.detail)
 
             vm.$nextTick(() => {
-              let img = vm.$refs.content.getElementsByTagName('img')[0]
-              console.log(img)
-              img.onclick = function () {
-                vm.imgUrl = img.currentSrc
-                vm.popVisible = true
-              }
+              let imgs = vm.$refs.content.getElementsByTagName('img')
+              Array.prototype.slice.call(imgs).forEach(e => {
+                e.onclick = function () {
+                  vm.imgUrl = e.currentSrc
+                  vm.popVisible = true
+                }
+              })
             })
           }
         })
@@ -130,8 +131,6 @@ export default {
   }
 }
 
-</style>
-<style lang="scss">
 .content{
   background: white;
   padding: .2rem .3rem;
@@ -147,4 +146,5 @@ export default {
   width: 100%;
   overflow: auto;
 }
+
 </style>

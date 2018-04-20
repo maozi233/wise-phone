@@ -10,7 +10,9 @@
           <p class="companyName single-line">{{detail.companyName}}</p>
         </div>
       </div>
-      <span class="favorite flex-center" @click="onFavoriteClick">{{detail.favorite ? '取消关注' : '关注店铺'}} </span>
+      <span class="favorite flex-center"
+            @click="onFavoriteClick"
+            :class="detail.favorite ? 'acitve' : ''">{{detail.favorite ? '取消关注' : '关注店铺'}} </span>
     </div>
     <div class="nav">
       <!-- <img class="search" src="~images/shop-search.png" @click="searchVisible = true"> -->
@@ -64,6 +66,7 @@
             </div>
             <no-data v-show="goods.length === 0"></no-data>
           </div>
+          <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="goods.length > 0"></load-more>
         </mt-tab-container-item>
         <mt-tab-container-item id="tab3">
           <div class="com-box">
@@ -110,6 +113,8 @@ import { ShopDecorate } from 'api/index/shopdecorate-service'
 import { FavoriteService } from 'api/index/favorite-service'
 import { GoodsService } from 'api/index/goods-service'
 import { GroupIdService } from 'api/index/groupid-service'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 
 export default {
   components: {
@@ -117,7 +122,8 @@ export default {
     TabContainerItem,
     [Header.name]: Header,
     NoData,
-    Popup
+    Popup,
+    LoadMore
   },
 
   data () {
@@ -135,7 +141,8 @@ export default {
       keyword: '',
       imgZs: '',
       goodsProp: 0,
-      shopDes: []
+      shopDes: [],
+      pager: new PageModel()
     }
   },
 
@@ -187,7 +194,7 @@ export default {
     getGoods () {
       this.goodsService.search({
         start: 0,
-        limit: 50,
+        limit: 10,
         dtmId: this.shopId,
         groupId: this.activeTagId,
         goodsProp: this.goodsProp,
@@ -195,8 +202,33 @@ export default {
       }).then(res => {
         if (res) {
           this.goods = res.list
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.goodsService.search({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          dtmId: this.shopId,
+          groupId: this.activeTagId,
+          goodsProp: this.goodsProp,
+          keyword: this.keyword
+        }).then(res => {
+          if (res) {
+            res.list.forEach(e => {
+              this.goods.push(e)
+            })
+          }
+          this.$refs.pageloader.close()
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     },
 
     getShopDes () {
@@ -395,6 +427,11 @@ export default {
     width: 1.2rem;
     height: 0.5rem;
     border-radius: .5rem;
+
+    &.active {
+      background: $text-green;
+      color: white;
+    }
   }
 }
 

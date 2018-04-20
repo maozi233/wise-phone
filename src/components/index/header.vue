@@ -16,7 +16,7 @@
           v-show="showSearch">
       <div class="container">
         <div class="left">
-          <input type="text" :placeholder="inputMsg">
+          <input type="text" :placeholder="inputMsg" readonly="readonly">
         </div>
         <button class="right flex-center">
           <img src="~images/head-search.png">

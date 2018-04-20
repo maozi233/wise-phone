@@ -20,6 +20,8 @@
             <p class="name">{{goods.goodsName}}</p>
           </div>
         </div>
+
+        <load-more ref="goodsPageloader" :loadmore="loadMoreHandle" v-show="favoriteGoods.length > 0"></load-more>
         <no-data v-if="!favoriteGoods.length"></no-data>
       </mt-tab-container-item>
       <mt-tab-container-item id="tab2">
@@ -29,6 +31,8 @@
           <img v-lazy="shop.dtManagerLogo" class="left">
           <p class="name">{{shop.dtManagerName}}</p>
         </div>
+
+        <load-more ref="shopsPageloader" :loadmore="loadMoreHandle" v-show="favoriteShops.length > 0"></load-more>
         <no-data v-if="!favoriteShops.length"></no-data>
       </mt-tab-container-item>
     </mt-tab-container>
@@ -40,7 +44,8 @@ import Back from 'comp/index/back'
 import NoData from 'comp/no-data'
 import {TabContainer, TabContainerItem} from 'mint-ui'
 import { FavoriteService } from 'api/manage/favorite-service'
-
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 import { GoodsService } from 'api/index/goods-service'
 
 export default {
@@ -48,14 +53,17 @@ export default {
     TabContainer,
     TabContainerItem,
     Back,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
     return {
       activePager: '',
       favoriteGoods: [],
-      favoriteShops: []
+      favoriteShops: [],
+      pagerGoods: new PageModel(),
+      pagerShops: new PageModel()
     }
   },
 
@@ -67,15 +75,47 @@ export default {
     getFavoriteInfos () {
       this.favoriteService.list({
         start: 0,
-        limit: 50,
+        limit: 10,
         type: this.favoriteType
       }).then(res => {
         if (this.favoriteType === 1) {
           this.favoriteGoods = res.list
+          this.pagerGoods.reset()
+          this.pagerGoods.setTotal(res.total)
         } else {
           this.favoriteShops = res.list
+          this.pagerShops.reset()
+          this.pagerShops.setTotal(res.total)
         }
       })
+    },
+
+    loadMoreHandle () {
+      let pager = this.favoriteType === 1 ? this.pagerGoods : this.pagerShops
+
+      let hasMore = pager.loadMore()
+      if (hasMore) {
+        this.favoriteService.list({
+          start: pager.curPage,
+          limit: pager.pageSize,
+          type: this.favoriteType
+        }).then(res => {
+          if (this.favoriteType === 1) {
+            res.list.forEach(e => {
+              this.favoriteGoods.push(e)
+            })
+          } else {
+            res.list.forEach(e => {
+              this.favoriteShops.push(e)
+            })
+          }
+          this.$refs.goodsPageloader.close()
+          this.$refs.shopsPageloader.close()
+        })
+      } else {
+        this.$refs.goodsPageloader.close()
+        this.$refs.shopsPageloader.close()
+      }
     },
 
     onShopClick (id) {

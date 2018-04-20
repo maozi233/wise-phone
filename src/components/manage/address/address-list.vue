@@ -25,29 +25,34 @@
         </div>
       </div>
     </div>
+    <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="address.length > 0"></load-more>
+    <no-data v-show="address.length === 0"></no-data>
   </div>
 </template>
 
 <script>
 import Back from 'comp/index/back'
-import NoData from 'comp/no-data'
 import { AddressService } from 'api/manage/address-service'
 import { Toast } from 'mint-ui'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
+import NoData from 'comp/no-data'
 
 export default {
   components: {
     Back,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
     return {
-      address: []
+      address: [],
+      pager: new PageModel()
     }
   },
 
   methods: {
-    // TODO: 新增地址与编辑地址功能
     toDetail ({target = 'new', data = {}} = {}) {
       if (target === 'edit') {
         data = {
@@ -101,7 +106,8 @@ export default {
 
     getAddress (hint) {
       this.addressService.list({
-        limit: 300
+        start: 0,
+        limit: 10
       }).then(res => {
         if (res) {
           this.address = res.list.map(e => {
@@ -112,8 +118,34 @@ export default {
           })
 
           hint && Toast(hint)
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.addressService.list({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize
+        }).then(res => {
+          if (res) {
+            res.list.map(e => {
+              e.location = e.province.name + e.city.name + e.county.name + e.address
+              return e
+            }).sort(e => {
+              return !e.defaul
+            }).forEach(e => {
+              this.address.push(e)
+            })
+          }
+          this.$refs.pageloader.close()
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     }
   },
 

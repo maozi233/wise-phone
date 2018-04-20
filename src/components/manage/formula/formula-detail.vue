@@ -67,7 +67,7 @@
 import Back from 'comp/index/back'
 import NoData from 'comp/no-data'
 import { BuyerService } from 'api/manage/buyerorder-service'
-import { SupplierService } from 'api/manage/supplierorder-service'
+import { MgrService } from 'api/manage/mgrorder-service'
 import { FormulationDetailStatus, roleType } from 'model/mgt-model'
 import { Specs } from 'model/model-types'
 import { Tools } from 'utils/tools'
@@ -114,8 +114,8 @@ export default {
       // console.log(vm.id)
       if (Tools.getRoleType() === roleType.Buyer) {
         vm.orderMgrService = new BuyerService()
-      } else if (Tools.getRoleType() === roleType.Supplier) {
-        vm.orderMgrService = new SupplierService()
+      } else if (Tools.getRoleType() === roleType.Formulators) {
+        vm.orderMgrService = new MgrService()
       }
       vm.getOrderDetail()
     })

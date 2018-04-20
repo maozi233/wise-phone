@@ -27,7 +27,8 @@
       </div>
     </div>
 
-     <no-data v-show="!orders.length"></no-data>
+    <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="orders.length > 0"></load-more>
+    <no-data v-show="orders.length === 0"></no-data>
   </div>
 </template>
 
@@ -37,21 +38,25 @@ import NoData from 'comp/no-data'
 import {TabContainer, TabContainerItem} from 'mint-ui'
 import { FormulationOrderStatus, roleType } from 'model/mgt-model'
 import { BuyerService } from 'api/manage/buyerorder-service'
-import { SupplierService } from 'api/manage/supplierorder-service'
+import { MgrService } from 'api/manage/mgrorder-service'
 import { Tools } from 'utils/tools'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 
 export default {
   components: {
     TabContainer,
     TabContainerItem,
     Back,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
     return {
       activePager: 'tab0',
-      orders: []
+      orders: [],
+      pager: new PageModel()
     }
   },
 
@@ -74,9 +79,10 @@ export default {
 
   methods: {
     getStockOrders () {
+      console.log(this.orderMgrService)
       this.orderMgrService.list({
         start: 0,
-        limit: 50,
+        limit: 10,
         orderType: 2,
         formulationStatus: this.stockStatus
       }).then(res => {
@@ -87,10 +93,37 @@ export default {
             e.pic = e.content.imgs ? JSON.parse(e.content.imgs)[0] : ''
             return e
           })
-
+          this.pager.reset()
+          this.pager.setTotal(res.total)
           console.log(this.orders)
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.orderMgrService.list({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          orderType: 2,
+          formulationStatus: this.stockStatus
+        }).then(res => {
+          if (res) {
+            res.list.map(e => {
+              e.detail = e.details[0]
+              e.content = JSON.parse(e.detail.mirror.content)
+              e.pic = e.content.imgs ? JSON.parse(e.content.imgs)[0] : ''
+              return e
+            }).forEach(e => {
+              this.orders.push(e)
+            })
+          }
+          this.$refs.pageloader.close()
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     },
 
     onItemClick (id) {
@@ -107,8 +140,8 @@ export default {
   created () {
     if (Tools.getRoleType() === roleType.Buyer) {
       this.orderMgrService = new BuyerService()
-    } else if (Tools.getRoleType() === roleType.Supplier) {
-      this.orderMgrService = new SupplierService()
+    } else if (Tools.getRoleType() === roleType.Formulators) {
+      this.orderMgrService = new MgrService()
     }
   },
 

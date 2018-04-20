@@ -63,7 +63,7 @@
       <div class="loadmore" @click="onLoadMoreClick">
         <div v-show="!isLoadmore" class="more-container">
           <span>查看更多</span>
-          <img src="../../assets/images/more.png" >
+          <img src="~images/more.png" >
         </div>
         <!-- <img src="../../assets/images/ajax-loader.gif" v-show="isLoadmore"> -->
         <mt-spinner type="snake" v-show="isLoadmore" class="spinner-snake"></mt-spinner>
@@ -645,6 +645,11 @@ section{
     display:flex;
     justify-content: center;
     align-items: center;
+
+    .more-container {
+      display:flex;
+      align-items:center;
+    }
 
     .loadmore {
       display: flex;

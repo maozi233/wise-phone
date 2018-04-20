@@ -18,7 +18,7 @@
           </p>
         </div>
       </div>
-
+      <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="infos.length > 0"></load-more>
       <no-data v-if="infos.length === 0"></no-data>
     </div>
     <sy-footer></sy-footer>
@@ -53,17 +53,20 @@
 <script>
 import Header from 'comp/index/header'
 import Footer from 'comp/index/footer'
+import LoadMore from 'comp/loadmore'
 import NoData from 'comp/no-data'
 import { Popup } from 'mint-ui'
 import { GoodsService } from 'api/index/goods-service'
 import { CategoryService } from 'api/index/category-service'
+import { PageModel } from 'model/page-model'
 
 export default {
   components: {
     [Header.name]: Header,
     [Footer.name]: Footer,
     Popup,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
@@ -72,7 +75,8 @@ export default {
       filterType: 0,
       filterCateId: '',
       filterPopVisible: false,
-      filterData: []
+      filterData: [],
+      pager: new PageModel()
     }
   },
 
@@ -91,7 +95,7 @@ export default {
       this.filterCateId = cateId
       this.goodsService.search({
         start: 0,
-        limit: 1000,
+        limit: 10,
         goodsProp: 4,
         keyword: '',
         cateId
@@ -101,8 +105,35 @@ export default {
             e.extContent = JSON.parse(e.extContent.content)
             return e
           })
+          this.pager.reset()
+          this.pager.setTotal(res.total)
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.goodsService.search({
+          start: 0,
+          limit: 10,
+          goodsProp: 4,
+          keyword: '',
+          cateId: this.filterCateId
+        }).then(res => {
+          if (res) {
+            res.list.map(e => {
+              e.extContent = JSON.parse(e.extContent.content)
+              return e
+            }).forEache(e => {
+              this.infos.push(e)
+            })
+            this.$refs.pageloader.close()
+          }
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     },
 
     getFilterData () {

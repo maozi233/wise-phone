@@ -6,7 +6,7 @@
             v-for="(item, index) in products" :key="index">
         <div class="top">
           <div class="shop-detail">
-            <img :src="item.dtManager.logo">
+            <img v-lazy="item.dtManager.logo">
             <div class="shop-des">
               <p class="shop-name">{{item.dtManager.shopName}}</p>
               <p class="company-name">{{item.dtManager.companyName}}</p>
@@ -30,6 +30,8 @@
           </div>
         </div>
       </div>
+      <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="products.length > 0"></load-more>
+      <no-data v-show="products.length === 0"></no-data>
     </div>
     <sy-footer></sy-footer>
   </div>
@@ -40,17 +42,22 @@ import Header from 'comp/index/header'
 import Footer from 'comp/index/footer'
 import NoData from 'comp/no-data'
 import { ShopResultService } from 'api/index/shop-service'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
+
 export default {
   components: {
     [Header.name]: Header,
     [Footer.name]: Footer,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
     return {
       products: [],
-      companyTypes: ['', '工厂型', '贸易型', '试剂型', '定制型']
+      companyTypes: ['', '工厂型', '贸易型', '试剂型', '定制型'],
+      pager: new PageModel()
     }
   },
 
@@ -71,6 +78,37 @@ export default {
           id
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.shopService.search({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          keyword: ''
+        }).then(res => {
+          if (res) {
+            res.list.map(e => {
+              if (e.goodsList) {
+                e.goodsList.map(v => {
+                  v.goodslogo = JSON.parse(v.imgs)[0]
+                  return v
+                })
+
+                // 最多只需要3个
+                e.goodsList.length = e.goodsList.length > 3 ? 3 : e.goodsList.length
+              }
+              return e
+            }).forEach(e => {
+              this.products.push(e)
+            })
+            this.$refs.pageloader.close()
+          }
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     }
   },
 
@@ -81,7 +119,7 @@ export default {
   mounted () {
     this.shopService.search({
       start: 0,
-      limit: 100,
+      limit: 10,
       keyword: ''
     }).then(res => {
       if (res) {
@@ -98,6 +136,8 @@ export default {
           }
           return e
         })
+        this.pager.reset()
+        this.pager.setTotal(res.total)
       }
     })
   }

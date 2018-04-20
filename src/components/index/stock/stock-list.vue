@@ -14,6 +14,7 @@
           <p class="price"><span>{{item.price}}</span> <span>{{item.price}}</span></p>
         </div>
       </div>
+      <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="products.length > 0"></load-more>
       <no-data v-if="products.length === 0"></no-data>
     </div>
     <sy-footer></sy-footer>
@@ -26,18 +27,22 @@ import Footer from 'comp/index/footer'
 import NoData from 'comp/no-data'
 import { GoodsService } from 'api/index/goods-service'
 import { Specs } from 'model/model-types'
+import { PageModel } from 'model/page-model'
+import LoadMore from 'comp/loadmore'
 
 export default {
   components: {
     [Header.name]: Header,
     [Footer.name]: Footer,
-    NoData
+    NoData,
+    LoadMore
   },
 
   data () {
     return {
       products: [],
-      specs: Specs
+      specs: Specs,
+      pager: new PageModel()
     }
   },
 
@@ -49,6 +54,30 @@ export default {
           id
         }
       })
+    },
+
+    loadMoreHandle () {
+      let hasMore = this.pager.loadMore()
+      if (hasMore) {
+        this.goodsService.list4client({
+          start: this.pager.curPage,
+          limit: this.pager.pageSize,
+          stockAdjustVerifyStatus: 400
+        }).then(res => {
+          if (res) {
+            res.list.map(e => {
+              e.exContent = JSON.parse(e.extContent.content)
+
+              return e
+            }).forEach(e => {
+              this.products.push(e)
+            })
+            this.$refs.pageloader.close()
+          }
+        })
+      } else {
+        this.$refs.pageloader.close()
+      }
     }
   },
 
@@ -59,7 +88,7 @@ export default {
   mounted () {
     this.goodsService.list4client({
       start: 0,
-      limit: 100,
+      limit: 10,
       stockAdjustVerifyStatus: 400
     }).then(res => {
       if (res) {
@@ -69,6 +98,8 @@ export default {
           return e
         })
         // console.log(this.products)
+        this.pager.reset()
+        this.pager.setTotal(res.total)
       }
     })
   }
