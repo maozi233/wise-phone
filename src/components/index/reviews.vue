@@ -9,11 +9,11 @@
 
       <div  class="content"
             v-for="(item, index) in reviews" :key="index">
-        <p class="name">{{item.realName}}</p>
+        <p class="name single-line">{{item.realName}}</p>
         <p class="time">{{item.createTime}}</p>
-        <p class="comment">{{item.text}}</p>
+        <p class="comment two-line">{{item.text}}</p>
         <div class="pr" v-if="item.pr">
-          <p>卖家回复：{{item.pr.text}}</p>
+          <p class="two-line">卖家回复：{{item.pr.text}}</p>
         </div>
       </div>
     </div>

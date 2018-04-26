@@ -23,7 +23,7 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       next({
-        path: '/login'
+        path: '/login?target=login'
       })
     }
   } else {

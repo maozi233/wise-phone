@@ -39,7 +39,7 @@
       <router-link to="/manage" >我的</router-link>
 
       <div class="btns">
-        <div class="btn-content">
+        <div class="btn-content" @click="onAuthClick">
           <img src="../../assets/images/identification.png">
           <span>入驻认证</span>
         </div>
@@ -199,11 +199,11 @@
 </template>
 
 <script>
-import {TabContainer, TabContainerItem, Popup, Badge, Toast} from 'mint-ui'
-import {CategoryService} from 'api/index/category-service'
-import {InquiryService} from 'api/index/inquiry-service'
+import { TabContainer, TabContainerItem, Popup, Badge, Toast, MessageBox } from 'mint-ui'
+import { CategoryService } from 'api/index/category-service'
+import { InquiryService } from 'api/index/inquiry-service'
 import { MessageService } from 'api/index/message-service'
-import {mapMutations} from 'vuex'
+import { mapMutations } from 'vuex'
 import { Tools } from 'utils/tools'
 
 export default {
@@ -285,6 +285,14 @@ export default {
     toHelp () {
       this.$router.push({
         path: '/help'
+      })
+    },
+
+    onAuthClick () {
+      MessageBox({
+        title: '提示',
+        message: '装配库暂未开放手机端的认证，烦请至pc门户进行相关操作',
+        showCancelButton: true
       })
     },
 

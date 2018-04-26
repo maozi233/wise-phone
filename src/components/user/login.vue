@@ -68,7 +68,7 @@ export default {
       register: true,
       sendMsgDisabled: false,
       time: 60,
-      refreshTime: new Date().getTime,
+      refreshTime: new Date().getTime(),
       loginForm: {
         tel: '',
         pwd: '',
@@ -91,9 +91,10 @@ export default {
   },
   methods: {
     login () {
-      let tel = this.loginForm.tel
-      let pwd = this.loginForm.pwd
-      let code = this.loginForm.code
+      let tel = this.loginForm.tel.trim()
+      let pwd = this.loginForm.pwd.trim()
+      let code = this.loginForm.code.trim()
+      alert(`code = ${code}`)
       if (!Reg.phone.test(tel)) {
         return Toast('请输入正确的手机号')
       }
@@ -112,8 +113,7 @@ export default {
         if (res) {
           let user = res.user
           Tools.setUser(user)
-
-          // 回到上个页面
+          // // 回到上个页面
           this.goBack()
         } else {
           this.refreshCode()
@@ -122,6 +122,7 @@ export default {
     },
 
     refreshCode () {
+      console.log('refreshTime changed')
       this.refreshTime = new Date().getTime()
     },
 
@@ -166,10 +167,10 @@ export default {
     },
 
     registerHandle () {
-      let tel = this.tab1Form.tel
-      let pwd = this.tab1Form.pwd
-      let pwdRep = this.tab1Form.pwdRep
-      let code = this.tab1Form.code
+      let tel = this.tab1Form.tel.trim()
+      let pwd = this.tab1Form.pwd.trim()
+      let pwdRep = this.tab1Form.pwdRep.trim()
+      let code = this.tab1Form.code.trim()
 
       if (!Reg.phone.test(tel)) {
         return Toast('请输入正确的手机号')
@@ -249,6 +250,7 @@ export default {
 
   created () {
     this.userService = new UserService()
+    console.log(this.codeUrl)
   },
 
   mounted () {
@@ -256,6 +258,7 @@ export default {
       this.time = window.localStorage.getItem('time')
       this.timer()
     }
+    console.log(this.codeUrl)
   }
 }
 </script>

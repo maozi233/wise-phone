@@ -11,6 +11,7 @@ const ENV = process.env
 const CONTENT_TYPE_KEY = 'Content-Type'
 const protocol = location.protocol
 export const API_URL = `${protocol}//${ENV.API_DOMAIN}/${ENV.API_CONTEXT}`
+export const API_UPLOAD_URL = `${API_URL}mgr/upload?type=0` + (ENV.DEBUG ? `&${ENV.DEBUG_STR}` : '')
 
 let axiosNum = 0 // 当前请求的数量
 
@@ -32,7 +33,7 @@ function checkResponse (response) {
       if (result.code !== '0') {
         Msg.alert('错误信息', result.msg, () => {
           if (result.code === '00000001') {
-            location.href = '/login'
+            location.href = '/login?target=login'
 
             return false
           }

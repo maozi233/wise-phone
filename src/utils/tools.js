@@ -1,7 +1,9 @@
 import _ from 'lodash'
-import {MessageBox} from 'mint-ui'
+import {MessageBox, Toast} from 'mint-ui'
 import $ from 'jquery'
 const ENV = process.env
+const acceptFileTypes = /^image\/(gif|jpe?g|png)$/i
+const fileMaxSize = 5000000
 
 export class Tools {
   static getImgPath (item, propName = 'imgs') {
@@ -27,11 +29,32 @@ export class Tools {
     // Buyer: 2, // 采购商
     //  Supplier: 3, // 供应商
     // Formulators: 4 // 配方师
-    return this.getUser().sysRole.roleType
+    if (this.getUser()) {
+      return this.getUser().sysRole.roleType
+    } else {
+      return ''
+    }
+    // return this.getUser().sysRole ? this.getUser().sysRole.roleType : ''
   }
 
   static toTop (transition = 0) {
     $('html,body').animate({scrollTop: 0}, transition)
+  }
+
+  static checkUploadImg (data, reg = acceptFileTypes) {
+    if (data.originalFiles[0]['type'].length && !reg.test(data.originalFiles[0]['type'])) {
+      if (reg === acceptFileTypes) {
+        Toast('图片格式仅支持JPG,PNG')
+      } else {
+        Toast('仅支持word、txt、pdf、excel文件类型')
+      }
+      return false
+    }
+    if (data.originalFiles[0]['size'].length && data.originalFiles[0]['size'] > fileMaxSize) {
+      return false
+    }
+
+    return true
   }
 }
 

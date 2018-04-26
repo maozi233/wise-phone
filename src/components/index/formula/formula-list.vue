@@ -102,7 +102,7 @@ import NoData from 'comp/no-data'
 
 // 配方师
 const RECOMMEND_TYPE = 2
-console.log(LoadMore)
+
 export default {
   components: {
     [Header.name]: Header,

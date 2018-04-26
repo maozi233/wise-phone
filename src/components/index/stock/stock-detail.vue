@@ -44,6 +44,10 @@
 
     <section v-if="detail">
       <div class="title">爬虫详情</div>
+      <div class="files">
+        <a  v-for="(file, index) in detail.exContent.goodsFile" :key="index"
+            :href="file.path">{{file.name}}</a>
+      </div>
     </section>
 
     <section class="explain">
@@ -298,6 +302,18 @@ section {
 
 .flex-bottom{
   height: 1rem;
+}
+
+.files {
+  padding: .2rem .3rem;
+  font-size: 0.36rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+
+  a {
+    margin-bottom: 0.2rem;
+  }
 }
 </style>
 <style lang="scss">

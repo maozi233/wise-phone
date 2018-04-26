@@ -42,51 +42,51 @@
 </template>
 
 <script>
-  import Vue from "vue";
-  export default {
-    name: 'sy-header',
-    data() {
-      return {
-        tabIndex: 0,
-        name:"",
-        tabName:[{
-          name: '首页',
-        },{
-          name: '明星配方',
-        },{
-          name: '技术服务',
-        },{
-          name: '生产商之窗',
-        },{
-          name: '库存调剂',
-        },{
-          name: '集中采购',
-        },{
-          name: '共享实验室',
-        }],
-        data: {
-          1: "test",
-          2: "test2"
-        }
+import Vue from 'vue';
+export default {
+  name: 'sy-header',
+  data () {
+    return {
+      tabIndex: 0,
+      name: '',
+      tabName: [{
+        name: '首页'
+      }, {
+        name: '明星配方'
+      }, {
+        name: '技术服务'
+      }, {
+        name: '生产商之窗'
+      }, {
+        name: '库存调剂'
+      }, {
+        name: '集中采购'
+      }, {
+        name: '共享实验室'
+      }],
+      data: {
+        1: 'test',
+        2: 'test2'
       }
-    },
-    components: {
-    },
-    computed: {},
-    methods: {
-      getMap(key) {
-        console.log("test");
-        return this.data[key];
-      }
-    },
-    created() {
-
-    },
-
-    mounted() {
-      // $.material.init();
     }
+  },
+  components: {
+  },
+  computed: {},
+  methods: {
+    getMap (key) {
+      console.log('test')
+        return this.data[key]
+      }
+  },
+  created () {
+
+  },
+
+  mounted () {
+    // $.material.init();
   }
+}
 </script>
 <style scoped lang="less">
   @import "~assets/less/base";

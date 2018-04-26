@@ -66,7 +66,7 @@
             </div>
             <no-data v-show="goods.length === 0"></no-data>
           </div>
-          <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="goods.length > 0"></load-more>
+          <load-more ref="pageloader" :loadmore="loadMoreHandle" v-show="goods.length > 9"></load-more>
         </mt-tab-container-item>
         <mt-tab-container-item id="tab3">
           <div class="com-box">
@@ -306,7 +306,6 @@ export default {
 
             vm.goodsProp = res.identityType
 
-            // TODO: 证书是否有多个？
             vm.imgZs = JSON.parse(res.user.extContent.content).imgs ? JSON.parse(res.user.extContent.content).imgs[0] : ''
 
             vm.$nextTick(() => {

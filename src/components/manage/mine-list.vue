@@ -4,9 +4,9 @@
     <div class="list">
       <div class="item"
             v-for="(item, index) in infos" :key="index">
-        <router-link :to="`/manage${item.path}`" v-if="!item.roleTypes.length || item.roleTypes.indexOf(roleType) != -1">
+        <router-link :to="`/manage${item.path}`" v-if="!item.roleTypes.length || item.roleTypes.indexOf(curRoleType) != -1">
           <img :src="item.img" class="left">
-          <p>{{item.title}} {{`${!item.roleTypes.length} || ${item.roleTypes.indexOf(roleType) != -1}`}}</p>
+          <p>{{item.title}}</p>
           <img src="~images/information-more.png" class="right">
         </router-link>
       </div>
@@ -24,6 +24,7 @@ import icon5 from 'images/mine-icon5.png'
 import icon6 from 'images/mine-icon6.png'
 import icon7 from 'images/mine-icon7.png'
 import { Tools } from 'utils/tools'
+import {roleType} from 'model/mgt-model'
 
 export default {
   components: {
@@ -36,12 +37,12 @@ export default {
         title: '库存订单',
         img: icon1,
         path: '/stock',
-        roleTypes: [2, 3]
+        roleTypes: [roleType.Buyer, roleType.Supplier]
       }, {
         title: '配方订单',
         img: icon2,
         path: '/formula',
-        roleTypes: [2, 4]
+        roleTypes: [roleType.Buyer, roleType.Formulators]
       }, {
         title: '我的关注',
         img: icon3,
@@ -60,15 +61,16 @@ export default {
       }, {
         title: '意见反馈',
         img: icon6,
-        path: '/',
+        path: '/feedback',
         roleTypes: []
       }, {
         title: '集采确认',
         img: icon7,
-        path: '/',
-        roleTypes: []
+        path: '/deal',
+        roleTypes: [roleType.Supplier]
       }],
-      roleType: Tools.getRoleType()
+      // 当前账号的roletype
+      curRoleType: Tools.getRoleType()
     }
   },
 

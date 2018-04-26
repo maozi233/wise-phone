@@ -70,6 +70,12 @@ import MgtFormulaList from '@/components/manage/formula/formula-list'
 import MgtFormulaDetail from '@/components/manage/formula/formula-detail'
 // 我的关注
 import MgtFollow from '@/components/manage/follow/follow'
+// 投诉
+import MgtComplain from '@/components/manage/complain/complain'
+// 意见反馈
+import MgtFeedback from '@/components/manage/feedback/feedback'
+// 集采确认
+import MgtDeal from '@/components/manage/deal/deal'
 // 地址管理
 import MgtAddress from '@/components/manage/address/address'
 import MgtAddressList from '@/components/manage/address/address-list'
@@ -219,6 +225,7 @@ export default new Router({
     {
       path: '/manage',
       component: Mine,
+      meta: {requiresAuth: true},
       children: [
         {
           path: '',
@@ -269,6 +276,18 @@ export default new Router({
         {
           path: 'follow',
           component: MgtFollow
+        },
+        {
+          path: 'complain',
+          component: MgtComplain
+        },
+        {
+          path: 'feedback',
+          component: MgtFeedback
+        },
+        {
+          path: 'deal',
+          component: MgtDeal
         }
       ]
     },

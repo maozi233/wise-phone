@@ -12,12 +12,24 @@ export default {
     title: {
       type: String,
       default: 'title'
+    },
+    defaultBack: {
+      type: Boolean,
+      default: true
+    },
+    customBack: {
+      type: Function,
+      default: () => {}
     }
   },
 
   methods: {
     goBack () {
-      this.$router.go(-1)
+      if (this.defaultBack) {
+        this.$router.go(-1)
+      } else {
+        this.customBack()
+      }
     }
   }
 }
