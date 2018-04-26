@@ -35,7 +35,7 @@
             <div class="code-container">
               <input type="text" v-model="loginForm.code" placeholder="请输入验证码">
               <div class="btn-send">
-                <img :src="codeUrl" @click="refreshCode">
+                <img v-if="codeUrl" :src="codeUrl" @click="refreshCode">
               </div>
             </div>
             <div class="btn" @click="login">登录</div>
@@ -95,7 +95,7 @@ export default {
       let tel = this.loginForm.tel.trim()
       let pwd = this.loginForm.pwd.trim()
       let code = this.loginForm.code.trim()
-      alert(`code = ${code}`)
+      // alert(`code = ${code}`)
       if (!Reg.phone.test(tel)) {
         return Toast('请输入正确的手机号')
       }
