@@ -80,15 +80,16 @@ export default {
         pwdRep: '',
         code: ''
       },
-      backUrl: '/'
+      backUrl: '/',
+      codeUrl: ''
     }
   },
 
-  computed: {
-    codeUrl () {
-      return `${API_URL}ClientVerifyCode/verify-code?_t=${this.refreshTime}`
-    }
-  },
+  // computed: {
+  //   codeUrl () {
+  //     return `${API_URL}ClientVerifyCode/verify-code?_t=${this.refreshTime}`
+  //   }
+  // },
   methods: {
     login () {
       let tel = this.loginForm.tel.trim()
@@ -113,7 +114,7 @@ export default {
         if (res) {
           let user = res.user
           Tools.setUser(user)
-          // // 回到上个页面
+          // 回到上个页面
           this.goBack()
         } else {
           this.refreshCode()
@@ -122,8 +123,8 @@ export default {
     },
 
     refreshCode () {
-      console.log('refreshTime changed')
-      this.refreshTime = new Date().getTime()
+      // this.refreshTime = new Date().getTime()
+      this.codeUrl = `${API_URL}ClientVerifyCode/verify-code?_t=${new Date().getTime()}`
     },
 
     sendCode () {
@@ -250,7 +251,6 @@ export default {
 
   created () {
     this.userService = new UserService()
-    console.log(this.codeUrl)
   },
 
   mounted () {
@@ -258,7 +258,7 @@ export default {
       this.time = window.localStorage.getItem('time')
       this.timer()
     }
-    console.log(this.codeUrl)
+    this.refreshCode()
   }
 }
 </script>
