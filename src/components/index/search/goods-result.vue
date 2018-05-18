@@ -4,7 +4,7 @@
     <div class="result-des">
       <p>全部结果<span>共{{this.goods.length}}个相关原料</span></p>
     </div>
-    <div class="result-detail">
+    <div class="result-detail" v-show="fristItem">
       <p>
         <span>化学名</span>
         <span>{{fristItem ? fristItem.chemicalCall : 'N/A'}}</span>
@@ -21,6 +21,11 @@
         <span>别名</span>
         <span>{{fristItem ? fristItem.name : 'N/A'}}</span>
       </p>
+    </div>
+
+    <div class="not-found" v-show="!fristItem">
+      <p>抱歉，原料中暂时没有找到{{inputSmg}}商品</p>
+      <span>请确认您输入的原料产品名/化学名/INCI名/分类 是否正确</span>
     </div>
 
     <div class="goods-list">
@@ -42,7 +47,7 @@
             </span>
           </p>
           <p>所属板块:<span>生产商之窗</span></p>
-          <span class="buy flex-center" @click="onItemClick(item.id)">购买</span>
+          <span class="buy flex-center" @click="onItemClick(item.id)">了解详情</span>
         </div>
         <no-data v-show="goods.length === 0"></no-data>
       </div>
@@ -66,12 +71,20 @@
         <div class="box" v-show="filterType === 0">
           <div  class="item"
                 @click="getFormulas('')"
-                :class="filterCateId === '' ? 'active' : ''">不限</div>
+                :class="cateId === '' ? 'active' : ''">不限</div>
           <div  class="item"
                 v-for="(item, index) in filterData" :key="index"
-                @click="getFormulas(item.id)"
-                :class="filterCateId === item.id ? 'active' : ''">
+                @click="onCateClick(item)"
+                :class="cateId === item.id ? 'active' : ''">
             {{item.name}}
+          </div>
+        </div>
+        <div class="box" id="child-box" v-show="cateId != ''">
+          <div  class="item"
+                v-for="(item, index) in activeFilterData" :key="index"
+                :class="filterCateId === item.name ? 'active' : ''"
+                @click="getFormulas(item.name)">
+            {{item.name === cateId ? '全部' : item.name}}
           </div>
         </div>
       </div>
@@ -105,7 +118,9 @@ export default {
       filterType: 0,
       filterPopVisible: false,
       filterData: [],
+      cateId: '',
       filterCateId: '',
+      activeFilterData: [],
       teac: '',
       pager: new PageModel()
     }
@@ -198,7 +213,17 @@ export default {
       this.filterPopVisible = true
       // 为空时去拿一次明星配方的tag数据
       if (this.filterData.length === 0) {
-        this.filterData = this.$store.state.formulaTagsCache
+        this.filterData = this.$store.state.materialTagsCache
+      }
+    },
+
+    onCateClick (item) {
+      this.cateId = item.name
+      if (item.children) {
+        this.activeFilterData = item.children.concat([])
+        this.activeFilterData.unshift({name: this.cateId})
+      } else {
+        this.activeFilterData = [{name: this.cateId}]
       }
     }
   },
@@ -394,6 +419,25 @@ export default {
         color: $text-black;
       }
     }
+  }
+}
+
+.not-found {
+  background-image: url('~images/notfound.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 4rem;
+  margin-bottom: 0.2rem;
+
+  p {
+    color: rgb(102, 102, 102);
+    font-size: .3rem;
+    padding-top: 1rem;
+  }
+
+  span {
+    color: rgb(102, 102, 102);
+    font-size: 0.2rem;
   }
 }
 </style>

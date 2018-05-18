@@ -1,6 +1,6 @@
 <template>
   <div>
-    <back :title="'配方订单'"><span class="new" @click="toDetail('new')">新增</span></back>
+    <back :title="'地址管理'"><span class="new" @click="toDetail('new')">新增</span></back>
     <div  class="address"
           v-if="address"
           v-for="(item, index) in address" :key="index">

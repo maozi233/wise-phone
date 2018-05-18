@@ -339,5 +339,12 @@ export default new Router({
       path: '*',
       component: NotFound
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(savedPosition || { x: 0, y: 0 })
+      }, 800)
+    })
+  }
 })

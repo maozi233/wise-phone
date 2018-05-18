@@ -137,8 +137,10 @@ export default {
         message: '是否要通过该采购商？',
         showCancelButton: true
       }).then(action => {
-        this.supplierProductService.verify(params)
-          .then(res => res ? this.getSupplierInfos() : '')
+        if (action === 'confirm') {
+          this.supplierProductService.verify(params)
+            .then(res => res ? this.getSupplierInfos() : '')
+        }
       })
     },
 
@@ -214,13 +216,15 @@ export default {
         message: '是否要通过该审核？',
         showCancelButton: true
       }).then(action => {
-        this.mgrService.approvePreOrderVerify(item.id)
-          .then(res => {
-            if (res) {
-              Toast('审核通过成功')
-              this.getForecastInfos()
-            }
-          })
+        if (action === 'confirm') {
+          this.mgrService.approvePreOrderVerify(item.id)
+            .then(res => {
+              if (res) {
+                Toast('审核通过成功')
+                this.getForecastInfos()
+              }
+            })
+        }
       })
     },
 
@@ -230,13 +234,15 @@ export default {
         message: '确定拒绝该审核？',
         showCancelButton: true
       }).then(action => {
-        this.mgrService.rejectPreOrderVerify({id: item.id})
-          .then(res => {
-            if (res) {
-              Toast('拒绝成功')
-              this.getForecastInfos()
-            }
-          })
+        if (action === 'confirm') {
+          this.mgrService.rejectPreOrderVerify({id: item.id})
+            .then(res => {
+              if (res) {
+                Toast('拒绝成功')
+                this.getForecastInfos()
+              }
+            })
+        }
       })
     }
   },

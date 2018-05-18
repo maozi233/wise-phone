@@ -32,14 +32,14 @@
           <router-link to="/login">注册</router-link>
         </p>
         <p class="btns">
-          <router-link to="/login" >常见问题</router-link>
-          <router-link to="/login" >关于我们</router-link>
-          <router-link to="/login" >服务条款</router-link>
-          <router-link to="/login" >法律声明</router-link>
-          <router-link to="/login" >隐私策略</router-link>
+          <router-link to="/help" >常见问题</router-link>
+          <a href="javascript:;">关于我们</a>
+          <a href="javascript:;">服务条款</a>
+          <a href="javascript:;">法律声明</a>
+          <a href="javascript:;">隐私策略</a>
         </p>
-        <p class="footer-text">Copyright  © 2006-2017 尚逸网络科技有限公司  保留所有权利</p>
-        <p class="footer-text">沪ICP备11052906号</p>
+        <p class="footer-text">Copyright @2018 上海尚逸网络科技有限公司 保留所有权利</p>
+        <p class="footer-text">沪ICP备17056012号-2</p>
       </div>
     </footer>
 </template>

@@ -5,6 +5,11 @@
       <p>全部结果<span>共{{this.goods.length}}个相关配方</span></p>
     </div>
 
+    <div class="not-found" v-show="!this.goods.length">
+      <p>抱歉，配方中暂时没有找到{{inputSmg}}配方</p>
+      <span>请确认您输入的配方名称/分类/描述的关键词类 是否正确</span>
+    </div>
+
     <div class="goods-list">
       <div class="title" @click="onFilterClick">
         <span>筛选条件</span>
@@ -35,7 +40,7 @@
       <div class="filterWrapper">
         <div class="box">
           <div class="item all" @click="getFormulas(-1)"><img src="~images/filter.jpg">全部</div>
-          <div class="item" @click="filterType = 0" :class="filterType === 0 ? 'active' : ''">产业分类</div>
+          <div class="item" @click="filterType = 0" :class="filterType === 0 ? 'active' : ''">分类</div>
           <div class="item" @click="filterType = 1" :class="filterType === 1 ? 'active' : ''">服务</div>
         </div>
         <div class="box" v-show="filterType === 0">
@@ -110,8 +115,12 @@ export default {
   methods: {
     onCateClick (item) {
       this.cateId = item.name
-      this.activeFilterData = item.children.concat([])
-      this.activeFilterData.unshift({name: this.cateId})
+      if (item.children) {
+        this.activeFilterData = item.children.concat([])
+        this.activeFilterData.unshift({name: this.cateId})
+      } else {
+        this.activeFilterData = [{name: this.cateId}]
+      }
     },
 
     // 点击过滤器
@@ -394,6 +403,25 @@ export default {
         color: $text-black;
       }
     }
+  }
+}
+
+.not-found {
+  background-image: url('~images/notfound.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 4rem;
+  margin-bottom: 0.2rem;
+
+  p {
+    color: rgb(102, 102, 102);
+    font-size: .3rem;
+    padding-top: 1rem;
+  }
+
+  span {
+    color: rgb(102, 102, 102);
+    font-size: 0.2rem;
   }
 }
 </style>

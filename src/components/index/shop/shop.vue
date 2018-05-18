@@ -46,7 +46,7 @@
                   v-for="(item, index) in recommends" :key="index"
                   @click="onRecommendClick(item.id)">
               <p class="name single-line">{{item.name}}</p>
-              <p class="price">¥{{item.price}}</p>
+              <!-- <p class="price">¥{{item.price}}</p> -->
             </div>
             <no-data v-show="recommends.length === 0"></no-data>
           </div>
@@ -62,7 +62,7 @@
                   v-for="(item, index) in goods" :key="index"
                   @click="onRecommendClick(item.id)">
               <p class="name single-line">{{item.name}}</p>
-              <p class="price">¥{{item.price}}</p>
+              <!-- <p class="price">¥{{item.price}}</p> -->
             </div>
             <no-data v-show="goods.length === 0"></no-data>
           </div>
@@ -240,9 +240,11 @@ export default {
           this.shopDes = res.content ? JSON.parse(res.content.content) : ''
           console.log(this.shopDes)
           // 店铺装修 会有 text pic banner 三种。目前保持和设计图一样只有banner
-          this.banners = this.shopDes.filter(e => {
-            return e.id === 'banner'
-          })
+          if (this.shopDes) {
+            this.banners = this.shopDes.filter(e => {
+              return e.id === 'banner'
+            })
+          }
           if (this.banners.length > 0) {
             this.banners = this.banners[0].prop
           }

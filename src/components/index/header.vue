@@ -5,7 +5,7 @@
     <div class="controll">
       <img class="logo" src="../../assets/images/sy-logo.png" @click="toHome()">
       <div class="btns">
-        <img src="../../assets/images/logon.png" @click="clickLogin">
+        <img :src="loginImg" @click="clickLogin" class="btn-login" ref="btnlogin">
         <img src="../../assets/images/service.jpg" v-show="!serviceVisible" @click="serviceVisible = true">
         <img src="../../assets/images/sy-service.png" v-show="serviceVisible" @click="closeServicePop">
         <img src="../../assets/images/navbar.png" @click="clickNavBarBtn">
@@ -31,7 +31,7 @@
       <router-link to="/star-formula" >明星配方</router-link>
       <router-link to="/techservice" >技术服务</router-link>
       <router-link to="/producer" >生产商之窗</router-link>
-      <router-link to="/stock" >库存调剂</router-link>
+      <router-link to="/stock" >销库存</router-link>
       <router-link to="/purchase" >集中采购</router-link>
       <router-link to="/lab" >共享实验室</router-link>
       <router-link to="/information" >行业资讯</router-link>
@@ -51,7 +51,7 @@
         <div class="hr"></div>
         <div class="btn-content" @click="toMessage">
           <div class="icon">
-            <img src="../../assets/images/information.png">
+            <img src="~images/information.png">
             <mt-badge class="badge" color="#9c36b5" v-if="messageLenth !== 0">{{messageLenth}}</mt-badge>
           </div>
           <span>消息</span>
@@ -69,21 +69,21 @@
       <div class="box">
         <p class="title">找原料</p>
         <div class="search-box">
-          <input type="text" v-model="searchForm.goods" placeholder="请输入你要搜索的原料名称">
+          <input type="text" v-model="searchForm.goods" placeholder="请输入原料产品名/化学名/INCI名/分类">
           <button class="flex-center" @click="onSearchClick(1)">搜索</button>
         </div>
       </div>
       <div class="box">
         <p class="title">找配方</p>
         <div class="search-box">
-          <input type="text" v-model="searchForm.formula" placeholder="请输入你要搜索的配方名称">
+          <input type="text" v-model="searchForm.formula" placeholder="请输入配方名称/分类/描述的关键词">
           <button class="flex-center" @click="onSearchClick(2)">搜索</button>
         </div>
       </div>
       <div class="box">
         <p class="title">找供应商</p>
         <div class="search-box">
-          <input type="text" v-model="searchForm.shop" placeholder="请输入你要搜索的供应商名称">
+          <input type="text" v-model="searchForm.shop" placeholder="请输入供应商名称/店铺名称">
           <button class="flex-center" @click="onSearchClick(3)">搜索</button>
         </div>
       </div>
@@ -137,9 +137,11 @@
             <div class="service-container">
               <div class="head">
                 <div class="title">分类查找</div>
-                <div class="seemore">
-                  <span>查看更多</span><img src="../../assets/images/more.png" >
-                </div>
+                <router-link to="/goods-result">
+                  <div class="seemore">
+                    <span>查看更多</span><img src="../../assets/images/more.png" >
+                  </div>
+                </router-link>
               </div>
               <div class="content">
                 <div  class="items single-line"
@@ -205,6 +207,8 @@ import { InquiryService } from 'api/index/inquiry-service'
 import { MessageService } from 'api/index/message-service'
 import { mapMutations } from 'vuex'
 import { Tools } from 'utils/tools'
+import defaultHead from 'images/default.png'
+import userHead from 'images/logon.png'
 
 export default {
   name: 'sy-header',
@@ -230,6 +234,7 @@ export default {
       searchbarVisible: false,
       serviceVisible: false,
       activeServicePager: 'service-tab1',
+      loginImg: userHead,
       tab1Form: {
         username: '',
         mobile: '',
@@ -251,18 +256,20 @@ export default {
         formula: '',
         shop: ''
       },
-      inputMsg: '请输入你要搜索的商品名称'
+      inputMsg: '请输入你要搜索的商品名称',
+      user: ''
     }
   },
 
   computed: {
     fomulaTypes () {
-      return this.$store.state.formulaTagsCache
+      return this.$store.state.formulaTagsCache.filter((e, i) => i < 20)
     },
 
     stockTypes () {
-      return this.$store.state.materialTagsCache
+      return this.$store.state.materialTagsCache.filter((e, i) => i < 20)
     },
+
     messageLenth () {
       return this.$store.state.unReadMsg || 0
     }
@@ -291,7 +298,7 @@ export default {
     onAuthClick () {
       MessageBox({
         title: '提示',
-        message: '装配库暂未开放手机端的认证，烦请至pc门户进行相关操作',
+        message: '妆配库暂未开放手机端的认证，烦请至pc门户进行相关操作',
         showCancelButton: true
       })
     },
@@ -304,7 +311,7 @@ export default {
 
     clickLogin () {
       this.$router.push({
-        path: '/login'
+        path: !this.user ? '/login' : '/manage'
       })
     },
 
@@ -380,12 +387,16 @@ export default {
 
       console.log(`msg=`, msg)
 
-      this.$router.push({
-        path: `${routerPath[type]}-result`,
-        query: {
-          msg
-        }
-      })
+      if (msg.trim()) {
+        this.$router.push({
+          path: `${routerPath[type]}-result`,
+          query: {
+            msg
+          }
+        })
+      } else {
+        Toast('搜索内容不能为空')
+      }
     },
 
     clickStockTag (name) {
@@ -414,26 +425,31 @@ export default {
     if (this.fomulaTypes.length === 0) {
       this.categoryService.listCache(3)
         .then(res => {
-          res.length = res.length > 20 ? 20 : res.length
           this.setFormulaTags(res)
         })
     }
     if (this.stockTypes.length === 0) {
       this.categoryService.listCache(1)
         .then(res => {
-          res.length = res.length > 20 ? 20 : res.length
           this.setMaterialTags(res)
         })
     }
-    let user = Tools.getUser()
-    // console.log(`user= ${user}`)
-    if (user) {
+    this.user = Tools.getUser()
+
+    if (this.user) {
+      console.log('login')
+      this.loginImg = this.user.head || defaultHead
+      this.$refs.btnlogin.style.borderColor = '#aaa'
+      this.$refs.btnlogin.style.borderRadius = '50%'
+
       this.messageService.unRead()
         .then(res => {
           if (res) {
             this.setUnReadMsg(res.count)
           }
         })
+    } else {
+      this.$refs.btnlogin.style.borderRadius = '0%'
     }
   },
 
@@ -456,6 +472,11 @@ export default {
 <style lang="scss">
 .popup-service.pop-active + .v-modal{
   top: 1.18rem
+}
+
+.mint-toast,
+.mint-toast-text {
+  z-index: 2016;
 }
 </style>
 
@@ -489,6 +510,10 @@ export default {
       width: .4rem;
       height: .4rem;
       margin-left: .2rem;
+    }
+
+    .btns > .btn-login {
+      border: 1px solid white;
     }
   }
 

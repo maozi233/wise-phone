@@ -26,6 +26,11 @@
         <p>{{detail.customerRemark || '暂无留言'}}</p>
       </div>
     </div>
+    <div class="manager" v-if="detail.content">
+      <p>公司名称： <span>{{detail.content.dtManager.companyName}}</span></p>
+      <p>账号： <span>{{detail.content.dtManager.mobile}}</span></p>
+      <p>联系人： <span>{{detail.content.dtManager.managerName}}</span></p>
+    </div>
 
     <div class="item" v-if="detail">
       <div class="top">
@@ -104,6 +109,7 @@ export default {
             // })[0].title
 
             this.status = AdjustDetailStatus[res.stockAdjustStatus][Tools.getUser().sysRole.roleType]
+            console.log(this.detail)
           }
         })
     }
@@ -185,6 +191,15 @@ export default {
     width: 0.35rem;
     height: 0.3rem;
   }
+}
+
+.manager {
+  background: white;
+  margin-bottom: .2rem;
+  text-align: left;
+  padding: .2rem .4rem;
+  font-size: .26rem;
+  line-height: 2;
 }
 
 .item {

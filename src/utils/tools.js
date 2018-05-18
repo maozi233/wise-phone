@@ -37,6 +37,10 @@ export class Tools {
     // return this.getUser().sysRole ? this.getUser().sysRole.roleType : ''
   }
 
+  static logout () {
+    localStorage.removeItem(ENV.USER_KEY)
+  }
+
   static toTop (transition = 0) {
     $('html,body').animate({scrollTop: 0}, transition)
   }

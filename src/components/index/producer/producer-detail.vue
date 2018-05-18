@@ -61,18 +61,20 @@
     </div>
 
     <flex-popup ref="flexPop">
+      <input type="text" v-model="concatForm.title">
+      <textarea v-model="concatForm.des" placeholder="请输入您的需求描述，如：产品性能、样品获取、销售渠道或价格等"></textarea>
       <input type="text" v-model="concatForm.name" placeholder="请输入姓名">
       <input type="number" v-model="concatForm.tel" placeholder="请输入手机号">
-      <textarea v-model="concatForm.des" placeholder="需求描述"></textarea>
-      <p>请填写您的信息, 我们稍后以短信的方式告知您供应商联系方式！</p>
-      <button @click="sendConcat" class="flex-center">确认</button>
+      <p class="red-text">*您的手机号已被加密，生产商无法查看</p>
+      <p class="red-text">*您的需求提交成功后，妆配库会将生产商的回复内容以短信方式发送至您的手机</p>
+      <button @click="sendConcat" class="flex-center">一键提交</button>
     </flex-popup>
 
     <div class="flex-bottom"></div>
     <flex-bottom  v-if="id"
                   :id="id"
                   :shopId="shopId"
-                  :rightBtnName="'询盘'"
+                  :rightBtnName="'联系生产商'"
                   :rightBtnHandle="enquiry"></flex-bottom>
   </div>
 </template>
@@ -106,7 +108,8 @@ export default {
       concatForm: {
         name: '',
         tel: '',
-        des: ''
+        des: '',
+        title: ''
       },
       specs: Specs,
       shopId: ''
@@ -134,7 +137,7 @@ export default {
       this.$refs.flexPop.hide()
       this.inquiryService.add({
         type: 1,
-        title: this.detail.name,
+        title: this.concatForm.title,
         userName: this.concatForm.name,
         mobile: this.concatForm.tel,
         description: this.concatForm.des,
@@ -150,6 +153,7 @@ export default {
     },
 
     enquiry () {
+      this.concatForm.title = this.detail.name
       this.$refs.flexPop.show()
     }
   },
@@ -368,7 +372,7 @@ section {
   textarea {
     height: 1.4rem;
     resize: none;
-    margin-bottom: 0;
+    margin-bottom: 0.2rem;
   }
 
   p {
@@ -385,5 +389,9 @@ section {
     background: $text-green;
   }
 
+  .red-text {
+    color: $text-red;
+    line-height: 1.5;
+  }
 }
 </style>

@@ -85,6 +85,9 @@
           </div>
         </div>
       </div>
+      <div class="see-more flex-center" @click="onFormulaBannerClick">
+        查看更多
+      </div>
     </section>
 
     <section class="advisor">
@@ -103,7 +106,7 @@
     </section>
 
     <section class="swap">
-      <div class="title">库存调剂</div>
+      <div class="title">销库存</div>
       <div class="message">
         <div class="left flex-center">成交信息</div>
         <div class="right flex-center">
@@ -131,6 +134,9 @@
             <span>库存:</span>{{item.stock}}<span></span>
           </p>
         </div>
+      </div>
+      <div class="flex-center see-more" @click="onSwapClick">
+        查看更多
       </div>
     </section>
 
@@ -161,14 +167,6 @@
     </section>
 
     <sy-footer></sy-footer>
-
-    <div class="flex-btns">
-      <a href="http://chat8.live800.com/live800/chatClient/chatbox.jsp?companyID=927517&configID=152270&jid=2734404684">
-        <img class="kefu" src="~images/home-kefu.png">
-      </a>
-      <img class="top" src="~images/home-top.png" @click="top">
-    </div>
-
   </div>
 </template>
 
@@ -210,9 +208,6 @@ export default {
   },
 
   methods: {
-    top () {
-      Tools.toTop(500)
-    },
     onGoodsClick (id) {
       this.$router.push({
         path: 'stock/detail',
@@ -252,6 +247,18 @@ export default {
         query: {
           id
         }
+      })
+    },
+
+    onFormulaBannerClick () {
+      this.$router.push({
+        path: '/star-formula'
+      })
+    },
+
+    onSwapClick () {
+      this.$router.push({
+        path: '/stock'
       })
     },
 
@@ -449,7 +456,7 @@ export default {
     // 滚动公告数据 ，暂时只有一条
     this.sysPropsService.get({propName: 'notice'}).then(res => {
       if (res) {
-        this.notice = JSON.parse(res[0].propValue).content
+        this.notice = res[0] ? JSON.parse(res[0].propValue).content : `欢迎来到妆配库`
       }
     })
   },
@@ -780,6 +787,7 @@ section{
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
+    margin-bottom: .5rem;
 
     .goods:nth-last-child(1),.goods:nth-last-child(2){
       margin-bottom: 0
@@ -882,20 +890,11 @@ section{
   }
 }
 
-.flex-btns {
-  width: 0.8rem;
-  position: fixed;
-  right: .2rem;
-  bottom: 10%;
-  display: flex;
-  flex-direction: column;
-  z-index: 1000;
-
-  .kefu , .top {
-    width:.8rem;
-    height: 0.8rem;
-    margin-bottom: 0.2rem;
-    vertical-align: bottom;
-  }
+.see-more {
+  height: 1rem;
+  width: 90%;
+  margin: 0 auto;
+  font-size: 0.2rem;
+  border-top: 1px solid #ddd;
 }
 </style>

@@ -24,7 +24,7 @@
             </div>
             <div class="btn" :class="!register ? 'register' : ''" @click="registerHandle">{{!register ? '更改密码'  : '立刻注册'}}</div>
             <p class="hint" v-show="register">已有账号, 马上<span @click="activePager = 'tab2'">登录</span></p>
-            <p class="footer-text">Copyright  © 2006-2017 尚逸网络科技有限公司  保留所有权利</p>
+            <p class="footer-text">Copyright  ? 2006-2017 尚逸网络科技有限公司  保留所有权利</p>
             <p class="footer-text">沪ICP备11052906号</p>
           </div>
         </mt-tab-container-item>
@@ -36,14 +36,16 @@
               <input type="text" v-model="loginForm.code" placeholder="请输入验证码">
               <div class="btn-send">
                 <img v-if="codeUrl" :src="codeUrl" @click="refreshCode">
+                <!-- <img v-if="codeUrl" :src="codeUrl"> -->
               </div>
             </div>
+            <!-- <div class="btn" @click="login">登录 请求了{{count}}次</div> -->
             <div class="btn" @click="login">登录</div>
             <p class="btns">
               <span @click="onForgetPwdClick">忘记密码?</span>
               <span @click="activePager = 'tab1'">注册</span>
             </p>
-            <p class="footer-text">Copyright  © 2006-2017 尚逸网络科技有限公司  保留所有权利</p>
+            <p class="footer-text">Copyright  ? 2006-2017 尚逸网络科技有限公司  保留所有权利</p>
             <p class="footer-text">沪ICP备11052906号</p>
           </div>
         </mt-tab-container-item>
@@ -53,12 +55,12 @@
 </template>
 
 <script>
-import {API_URL} from 'utils/http-client'
-import {Reg} from 'utils/validator'
-import {Toast} from 'mint-ui'
+import { API_URL } from 'utils/http-client'
+import { Reg } from 'utils/validator'
+import { Toast } from 'mint-ui'
 import md5 from 'js-md5'
-import {UserService} from 'api/user/user-service'
-import {Tools} from 'utils/tools'
+import { UserService } from 'api/user/user-service'
+import { Tools } from 'utils/tools'
 // import { Msg } from 'utils/tools'
 
 export default {
@@ -81,7 +83,8 @@ export default {
         code: ''
       },
       backUrl: '/',
-      codeUrl: ''
+      codeUrl: '',
+      count: 0
     }
   },
 
@@ -95,7 +98,7 @@ export default {
       let tel = this.loginForm.tel.trim()
       let pwd = this.loginForm.pwd.trim()
       let code = this.loginForm.code.trim()
-      // alert(`code = ${code}`)
+
       if (!Reg.phone.test(tel)) {
         return Toast('请输入正确的手机号')
       }
@@ -106,10 +109,12 @@ export default {
         return Toast('请输入验证码')
       }
 
+      // alert(encodeURIComponent(code) === code)
+
       this.userService.login({
         loginId: tel,
-        password: md5(pwd),
-        code
+        code: this.loginForm.code.trim(),
+        password: md5(pwd)
       }).then(res => {
         if (res) {
           let user = res.user
@@ -124,6 +129,7 @@ export default {
 
     refreshCode () {
       // this.refreshTime = new Date().getTime()
+      this.count++
       this.codeUrl = `${API_URL}ClientVerifyCode/verify-code?_t=${new Date().getTime()}`
     },
 
@@ -136,19 +142,17 @@ export default {
       }
 
       if (this.register) {
-        this.userService.sendRegisterCode(`${tel}`)
-          .then(res => {
-            if (res) {
-              this.timer()
-            }
-          })
+        this.userService.sendRegisterCode(`${tel}`).then(res => {
+          if (res) {
+            this.timer()
+          }
+        })
       } else {
-        this.userService.sendResetCode({mobile: tel})
-          .then(res => {
-            if (res) {
-              this.timer()
-            }
-          })
+        this.userService.sendResetCode({ mobile: tel }).then(res => {
+          if (res) {
+            this.timer()
+          }
+        })
       }
     },
 
@@ -159,7 +163,7 @@ export default {
         if (this.register) {
           window.localStorage.setItem('time', this.time)
         }
-        if ((this.time--) <= 0) {
+        if (this.time-- <= 0) {
           this.time = 60
           this.sendMsgDisabled = false
           window.clearInterval(interval)
@@ -192,32 +196,36 @@ export default {
 
       // 注册的情况
       if (this.register) {
-        this.userService.register({
-          mobile: tel + '',
-          code,
-          password: md5(pwd)
-        }).then(res => {
-          if (res) {
-            Toast('注册成功')
-            let user = res.user
-            Tools.setUser(user)
+        this.userService
+          .register({
+            mobile: tel + '',
+            code,
+            password: md5(pwd)
+          })
+          .then(res => {
+            if (res) {
+              Toast('注册成功')
+              let user = res.user
+              Tools.setUser(user)
 
-            // 回到上个页面
-            this.goBack()
-          }
-        })
+              // 回到上个页面
+              this.goBack()
+            }
+          })
       } else {
         // 修改密码
-        this.userService.updatePwdWithCode({
-          mobile: tel,
-          code,
-          password: md5(pwd)
-        }).then(res => {
-          if (res) {
-            Toast('修改密码成功')
-            this.$router.push('/')
-          }
-        })
+        this.userService
+          .updatePwdWithCode({
+            mobile: tel,
+            code,
+            password: md5(pwd)
+          })
+          .then(res => {
+            if (res) {
+              Toast('修改密码成功')
+              this.$router.push('/')
+            }
+          })
       }
     },
 
@@ -241,7 +249,7 @@ export default {
   beforeRouteEnter: (to, from, next) => {
     next(vm => {
       // 记录是从哪个路由跳转过来的
-      vm.backUrl = from.path
+      vm.backUrl = from.fullPath
       let isLogin = to.query.target === 'login'
       if (isLogin) {
         vm.activePager = 'tab2'
@@ -251,6 +259,8 @@ export default {
 
   created () {
     this.userService = new UserService()
+    // alert('created')
+    // this.refreshCode()
   },
 
   mounted () {
@@ -263,7 +273,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '../../scss/shotcut.scss';
+@import "../../scss/shotcut.scss";
 
 // body {
 //   overflow: hidden;
@@ -280,10 +290,10 @@ export default {
 
   .return {
     position: absolute;
-    top: .3rem;
-    left: .3rem;
-    width:.3rem;
-    height: .3rem;
+    top: 0.3rem;
+    left: 0.3rem;
+    width: 0.3rem;
+    height: 0.3rem;
   }
 
   .page-header {
@@ -291,8 +301,8 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: .8rem;
-    font-size: .36rem;
+    height: 0.8rem;
+    font-size: 0.36rem;
     color: white;
     display: flex;
     justify-content: space-around;
@@ -300,19 +310,19 @@ export default {
 
   .triangle {
     position: absolute;
-    bottom:0;
+    bottom: 0;
     left: 25%;
     &.active {
       left: 75%;
     }
     transform: translateX(-50%);
-    width:0;
-    height:0;
+    width: 0;
+    height: 0;
 
-    border-top:.15rem solid rgba(0,0,0,0);
-    border-right:.15rem solid  rgba(0,0,0,0);
-    border-bottom:.15rem solid white;
-    border-left:.15rem solid  rgba(0,0,0,0);
+    border-top: 0.15rem solid rgba(0, 0, 0, 0);
+    border-right: 0.15rem solid rgba(0, 0, 0, 0);
+    border-bottom: 0.15rem solid white;
+    border-left: 0.15rem solid rgba(0, 0, 0, 0);
   }
 }
 
@@ -328,42 +338,42 @@ export default {
   }
 }
 
-.input-container{
-  padding: .3rem .75rem;
+.input-container {
+  padding: 0.3rem 0.75rem;
   background: white;
   font-size: 0;
 
   input {
     width: 100%;
-    height: .9rem;
+    height: 0.9rem;
     box-sizing: border-box;
     border-radius: 3px;
     border: 1px solid $border-gray;
-    font-size: .28rem;
+    font-size: 0.28rem;
     text-indent: 1em;
-    margin-bottom: .2rem;
+    margin-bottom: 0.2rem;
   }
 
-  .code-container{
+  .code-container {
     display: flex;
-    margin-bottom: .4rem;
+    margin-bottom: 0.4rem;
 
     .btn-send {
       border: 1px solid $text-green;
-      color:$text-green;
-      font-size: .28rem;
-      margin-left: .18rem;
+      color: $text-green;
+      font-size: 0.28rem;
+      margin-left: 0.18rem;
       flex-shrink: 0;
-      line-height: .9rem;
-      height: .9rem;
+      line-height: 0.9rem;
+      height: 0.9rem;
       box-sizing: border-box;
       border-radius: 3px;
       width: 2rem;
-      &>img{
+      & > img {
         width: 100%;
         height: 100%;
       }
-      &.sendMsgDisabled{
+      &.sendMsgDisabled {
         border-color: $border-gray;
         color: $border-gray;
       }
@@ -371,44 +381,44 @@ export default {
   }
 
   .btn {
-    height: .9rem;
-    line-height: .9rem;
-    font-size: .36rem;
+    height: 0.9rem;
+    line-height: 0.9rem;
+    font-size: 0.36rem;
     background: $text-green;
     color: white;
     border-radius: 3px;
-    margin-bottom: .3rem;
+    margin-bottom: 0.3rem;
 
-    &.register{
+    &.register {
       margin-bottom: 1.2rem;
     }
   }
 
-  .btns{
+  .btns {
     display: flex;
     justify-content: space-between;
     margin-bottom: 1.7rem;
 
     span {
       color: $text-gray;
-      font-size: .24rem;
+      font-size: 0.24rem;
     }
   }
 
-  .hint{
-    font-size: .24rem;
+  .hint {
+    font-size: 0.24rem;
     color: $text-french;
-    margin-bottom: .8rem;
+    margin-bottom: 0.8rem;
 
     & > span {
-      color :$text-green;
+      color: $text-green;
     }
   }
 
-  .footer-text{
-    font-size: .16rem;
+  .footer-text {
+    font-size: 0.16rem;
     color: $text-french;
-    line-height: .26rem;
+    line-height: 0.26rem;
   }
 }
 </style>

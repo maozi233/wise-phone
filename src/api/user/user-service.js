@@ -1,5 +1,5 @@
-import {BaseService} from 'api/base-service'
-import {HttpClient} from 'utils/http-client'
+import { BaseService } from 'api/base-service'
+import { HttpClient } from 'utils/http-client'
 
 export class UserService extends BaseService {
   constructor () {
@@ -7,6 +7,7 @@ export class UserService extends BaseService {
   }
 
   login (params) {
+    // alert(JSON.stringify(params))
     return HttpClient.post(`${this.apiContext}login`, {
       body: params
     })

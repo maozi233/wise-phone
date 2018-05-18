@@ -5,6 +5,11 @@
       <p>全部结果<span>共{{this.shops.length}}个相关店铺</span></p>
     </div>
 
+    <div class="not-found" v-show="!this.shops.length">
+      <p>抱歉，店铺中暂时没有找到{{inputSmg}}店铺</p>
+      <span>请确认您输入的供应商名称/店铺名称 是否正确</span>
+    </div>
+
     <div class="product-container">
       <div  class="item"
             v-for="(item, index) in shops" :key="index">
@@ -93,15 +98,18 @@ export default {
       this.shopService.search({
         start: 0,
         limit: 10,
-        keyword: this.inputSmg
+        keyword: this.inputSmg,
+        dtManagerIdentityType: 1
       }).then(res => {
         if (res) {
           console.log(res)
           this.shops = res.list.map(e => {
             if (e.goodsList) {
-              e.goodsList.map(v => {
+              e.goodsList = e.goodsList.map(v => {
                 v.goodslogo = JSON.parse(v.imgs)[0]
                 return v
+              }).filter(e => {
+                return e.stockAdjustVerifyStatus !== 400
               })
 
               // 最多只需要3个
@@ -121,7 +129,8 @@ export default {
         this.shopService.search({
           start: this.pager.curPage,
           limit: this.pager.pageSize,
-          keyword: this.inputSmg
+          keyword: this.inputSmg,
+          dtManagerIdentityType: 1
         }).then(res => {
           if (res) {
             res.list.map(e => {
@@ -285,6 +294,25 @@ export default {
         }
       }
     }
+  }
+}
+
+.not-found {
+  background-image: url('~images/notfound.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 4rem;
+  margin-bottom: 0.2rem;
+
+  p {
+    color: rgb(102, 102, 102);
+    font-size: .3rem;
+    padding-top: 1rem;
+  }
+
+  span {
+    color: rgb(102, 102, 102);
+    font-size: 0.2rem;
   }
 }
 </style>

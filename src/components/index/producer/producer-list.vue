@@ -86,7 +86,8 @@ export default {
         this.shopService.search({
           start: this.pager.curPage,
           limit: this.pager.pageSize,
-          keyword: ''
+          keyword: '',
+          dtManagerIdentityType: 1
         }).then(res => {
           if (res) {
             res.list.map(e => {
@@ -94,6 +95,8 @@ export default {
                 e.goodsList.map(v => {
                   v.goodslogo = JSON.parse(v.imgs)[0]
                   return v
+                }).filter(e => {
+                  return e.stockAdjustVerifyStatus !== 400
                 })
 
                 // 最多只需要3个
@@ -120,7 +123,8 @@ export default {
     this.shopService.search({
       start: 0,
       limit: 10,
-      keyword: ''
+      keyword: '',
+      dtManagerIdentityType: 1
     }).then(res => {
       if (res) {
         console.log(res)
@@ -129,6 +133,8 @@ export default {
             e.goodsList.map(v => {
               v.goodslogo = JSON.parse(v.imgs)[0]
               return v
+            }).filter(e => {
+              return e.stockAdjustVerifyStatus !== 400
             })
 
             // 最多只需要3个

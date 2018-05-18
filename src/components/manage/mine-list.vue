@@ -10,6 +10,13 @@
           <img src="~images/information-more.png" class="right">
         </router-link>
       </div>
+      <div class="item" @click="logout">
+        <a href="javascript:;">
+          <img src="~images/log-out.png" style="width"  class="left">
+          <p>注销</p>
+          <img src="~images/information-more.png" class="right">
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -25,10 +32,13 @@ import icon6 from 'images/mine-icon6.png'
 import icon7 from 'images/mine-icon7.png'
 import { Tools } from 'utils/tools'
 import {roleType} from 'model/mgt-model'
+import { MessageBox } from 'mint-ui'
+import { UserService } from 'api/user/user-service'
 
 export default {
   components: {
-    Back
+    Back,
+    MessageBox
   },
 
   data () {
@@ -75,6 +85,24 @@ export default {
   },
 
   methods: {
+    logout () {
+      MessageBox({
+        title: '提示',
+        message: '是否要注销？',
+        showCancelButton: true
+      }).then(action => {
+        if (action === 'confirm') {
+          this.userService.logout().then(result => {
+            Tools.logout()
+            location.reload()
+          })
+        }
+      })
+    }
+  },
+
+  created () {
+    this.userService = new UserService()
   }
 }
 </script>

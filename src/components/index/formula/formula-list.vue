@@ -49,7 +49,7 @@
       <div class="filterWrapper">
         <div class="box">
           <div class="item all" @click="getFormulas(-1)"><img src="~images/filter.jpg">全部</div>
-          <div class="item" @click="filterType = 0" :class="filterType === 0 ? 'active' : ''">产业分类</div>
+          <div class="item" @click="filterType = 0" :class="filterType === 0 ? 'active' : ''">分类</div>
           <div class="item" @click="filterType = 1" :class="filterType === 1 ? 'active' : ''">服务</div>
         </div>
         <div class="box" v-show="filterType === 0">
@@ -130,8 +130,12 @@ export default {
   methods: {
     onCateClick (item) {
       this.cateId = item.name
-      this.activeFilterData = item.children.concat([])
-      this.activeFilterData.unshift({name: this.cateId})
+      if (item.children) {
+        this.activeFilterData = item.children.concat([])
+        this.activeFilterData.unshift({name: this.cateId})
+      } else {
+        this.activeFilterData = [{name: this.cateId}]
+      }
     },
     /**
      *  @param {str} type 请求类型 -1不限 0是产品类型 1是服务类型
@@ -203,7 +207,6 @@ export default {
         }).then(res => {
           if (res) {
             console.log(res)
-            // this.formulas.concat()
             res.list.forEach(e => {
               this.formulas.push(e)
             })
