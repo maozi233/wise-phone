@@ -389,7 +389,7 @@ export default {
 
       if (msg.trim()) {
         this.$router.push({
-          path: `${routerPath[type]}-result`,
+          path: `/${routerPath[type]}-result`,
           query: {
             msg
           }
@@ -470,8 +470,8 @@ export default {
 </script>
 
 <style lang="scss">
-.popup-service.pop-active + .v-modal{
-  top: 1.18rem
+.popup-service.pop-active + .v-modal {
+  top: 1.18rem;
 }
 
 .mint-toast,
@@ -483,16 +483,16 @@ export default {
 <style lang="scss" scoped>
 @import '../../scss/shotcut.scss';
 
-#header{
+#header {
   background: white;
-  padding: 0 .3rem;
-  margin-bottom: .1rem;
+  padding: 0 0.3rem;
+  margin-bottom: 0.1rem;
 
   &.no-margin {
     margin-bottom: 0;
   }
 
-  .controll{
+  .controll {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -500,16 +500,16 @@ export default {
     height: 1rem;
     font-size: 0;
 
-    .logo{
+    .logo {
       width: 1.6rem;
-      height: .53rem;
+      height: 0.53rem;
       background: white;
     }
 
-    .btns > img{
-      width: .4rem;
-      height: .4rem;
-      margin-left: .2rem;
+    .btns > img {
+      width: 0.4rem;
+      height: 0.4rem;
+      margin-left: 0.2rem;
     }
 
     .btns > .btn-login {
@@ -517,11 +517,11 @@ export default {
     }
   }
 
-  .search-bar{
-    padding-top: .17rem;
-    padding-bottom: .2rem;
+  .search-bar {
+    padding-top: 0.17rem;
+    padding-bottom: 0.2rem;
     width: 6.9rem;
-    height: .8rem;
+    height: 0.8rem;
 
     & > .container {
       width: 100%;
@@ -561,66 +561,67 @@ export default {
   }
 }
 
-.navbar-container{
-  width:80%;
-  height:100%;
+.navbar-container {
+  width: 80%;
+  height: 100%;
   background-color: white;
   font-size: 0;
 
-  & > a{
+  & > a {
     display: inline-flex;
     box-sizing: border-box;
-    width:100%;
-    height:.88rem;
-    line-height:.88rem;
+    width: 100%;
+    height: 0.88rem;
+    line-height: 0.88rem;
     border-bottom: 1px solid $border-gray;
-    font-size: .3rem;
+    font-size: 0.3rem;
     color: $text-black;
-    padding-left: .3rem;
+    padding-left: 0.3rem;
   }
 
   .btns {
     box-sizing: border-box;
     height: 1rem;
-    padding: .1rem 0;
+    padding: 0.1rem 0;
     display: flex;
     align-items: center;
-    margin-top: .3rem;
+    margin-top: 0.3rem;
 
-    div.hr{
+    div.hr {
       width: 1px;
-      height: .5rem;
+      height: 0.5rem;
       background: $border-gray;
     }
 
-    .btn-content{
+    .btn-content {
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
       box-sizing: border-box;
       flex-grow: 1;
 
-      & > img,.icon img{
-        width: .4rem;
-        height: .4rem;
-        padding-bottom: .1rem;
+      & > img,
+      .icon img {
+        width: 0.4rem;
+        height: 0.4rem;
+        padding-bottom: 0.1rem;
       }
 
       .icon {
         position: relative;
 
-        .badge{
-          height: .18rem;
+        .badge {
+          height: 0.18rem;
           position: absolute;
           top: 0;
           right: -40%;
-          font-size: .14rem;
+          font-size: 0.14rem;
           padding: 2px 5px;
         }
       }
 
       & > span {
-        font-size: .24rem;
+        font-size: 0.24rem;
         color: $text-black;
       }
     }
@@ -632,15 +633,15 @@ export default {
   width: 100%;
   height: 100%;
 
-  .content{
+  .content {
     background: white;
-    padding: .4rem .4rem 0;
+    padding: 0.4rem 0.4rem 0;
     text-align: left;
 
     & > img {
-      width: .3rem;
-      height: .3rem;
-      margin-bottom: .5rem;
+      width: 0.3rem;
+      height: 0.3rem;
+      margin-bottom: 0.5rem;
       vertical-align: top;
     }
 
@@ -649,28 +650,28 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding-bottom: .8rem;
+      padding-bottom: 0.8rem;
       .title {
-        font-size: .36rem;
+        font-size: 0.36rem;
         color: $text-black;
       }
 
       .search-box {
-        height: .7rem;
+        height: 0.7rem;
         display: flex;
         justify-content: space-between;
-        & > input{
+        & > input {
           height: 100%;
           box-sizing: border-box;
-          font-size: .28rem;
+          font-size: 0.28rem;
           border-bottom: 1px solid #aaa;
           width: 5rem;
         }
 
         & > button {
-          height:100%;
+          height: 100%;
           width: 1.2rem;
-          font-size: .28rem;
+          font-size: 0.28rem;
           color: white;
           background: $text-green;
         }
@@ -682,34 +683,34 @@ export default {
 .popup-service {
   top: 1rem;
   width: 100%;
-  .page-header{
+  .page-header {
     display: flex;
-    height: .9rem;
+    height: 0.9rem;
     box-sizing: border-box;
     border-top: 1px solid $border-gray;
     border-bottom: 1px solid $border-gray;
 
-    .page-tab{
+    .page-tab {
       flex-grow: 1;
-      font-size: .28rem;
+      font-size: 0.28rem;
       box-sizing: border-box;
 
-      &.active{
+      &.active {
         color: $text-green;
-        border-bottom:4px solid $text-green;
+        border-bottom: 4px solid $text-green;
       }
     }
   }
-  .pager-body{
-    padding: 0 .3rem;
+  .pager-body {
+    padding: 0 0.3rem;
 
     .head {
       display: flex;
       justify-content: space-between;
-      height: .8rem;
+      height: 0.8rem;
 
       .title {
-        font-size: .32rem;
+        font-size: 0.32rem;
         color: $text-black;
         display: flex;
         align-items: center;
@@ -718,80 +719,81 @@ export default {
       .seemore {
         display: flex;
         align-items: center;
-        font-size: .28rem;
+        font-size: 0.28rem;
         color: $text-black;
         text-align: right;
         height: 100%;
 
         & > img {
-          width: .28rem;
-          height: .28rem;
+          width: 0.28rem;
+          height: 0.28rem;
           margin-top: 3px;
-          margin-left: .1rem;
+          margin-left: 0.1rem;
         }
       }
     }
 
-    .content{
+    .content {
       display: flex;
       flex-wrap: wrap;
-      padding-bottom: .2rem;
+      padding-bottom: 0.2rem;
       border-bottom: 1px solid $border-gray;
 
       .items {
         width: 25%;
-        text-align:left;
-        line-height: .5rem;
-        font-size: .24rem;
+        text-align: left;
+        line-height: 0.5rem;
+        font-size: 0.24rem;
         color: $text-gray;
-        border: 1px solid rgba(0,0,0,0);
+        border: 1px solid rgba(0, 0, 0, 0);
         box-sizing: border-box;
       }
     }
 
     .bottom {
-      padding-bottom: .3rem;
+      padding-bottom: 0.3rem;
       display: flex;
-      flex-direction : column;
+      flex-direction: column;
       align-items: flex-start;
 
-      .title{
-        height: .9rem;
-        line-height: .9rem;
-        font-size: .32rem;
-        color:$text-black;
+      .title {
+        height: 0.9rem;
+        line-height: 0.9rem;
+        font-size: 0.32rem;
+        color: $text-black;
       }
 
-      .description, & > input {
-        margin-bottom: .2rem;
+      .description,
+      & > input {
+        margin-bottom: 0.2rem;
         box-sizing: border-box;
         border: 1px solid $border-gray;
-        text-indent: .25rem;
-        width:6rem;
-        height: .6rem;
-        line-height: .6rem;
-        font-size: .24rem;
+        text-indent: 0.25rem;
+        width: 6rem;
+        height: 0.6rem;
+        line-height: 0.6rem;
+        font-size: 0.24rem;
       }
 
       .description {
         height: 1.2rem;
         resize: none;
         outline: none;
-        line-height: .4rem;
+        line-height: 0.4rem;
       }
 
       .btn-container {
-        padding-top: .1rem;
+        padding-top: 0.1rem;
         display: flex;
-        justify-content:center;
-        width:100%;
+        justify-content: center;
+        width: 100%;
 
         .service-submit {
           background: $text-green;
           color: white;
-          font-size: .24rem;
+          font-size: 0.24rem;
           width: 3rem;
-          height: .6rem;
+          height: 0.6rem;
           display: inline-flex;
         }
       }
@@ -799,8 +801,8 @@ export default {
 
     .introduction {
       color: $text-gray;
-      font-size: .3rem;
-      padding: .3rem;
+      font-size: 0.3rem;
+      padding: 0.3rem;
 
       & > p {
         text-align: left;
@@ -808,13 +810,12 @@ export default {
 
       & > a {
         border: 1px solid $border-gray;
-        padding: .1rem .3rem;
+        padding: 0.1rem 0.3rem;
         border-radius: 2px;
-        margin-top: .2rem;
+        margin-top: 0.2rem;
         display: inline-block;
       }
     }
   }
 }
-
 </style>

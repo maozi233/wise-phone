@@ -88,6 +88,19 @@ export default {
 </script>
 
 <style lang="scss">
+// .content{
+//   background: white;
+//   padding: .2rem .3rem;
+
+//   img {
+//     max-width: 100%;
+//   }
+// }
+</style>
+
+<style lang="scss" scoped>
+@import '~scss/shotcut';
+
 .content{
   background: white;
   padding: .2rem .3rem;
@@ -96,10 +109,6 @@ export default {
     max-width: 100%;
   }
 }
-</style>
-
-<style lang="scss" scoped>
-@import '~scss/shotcut';
 
 .title {
   background: white;

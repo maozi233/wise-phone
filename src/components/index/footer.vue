@@ -3,19 +3,19 @@
       <div class="top-list">
         <div class="icon-box">
           <img src="../../assets/images/icon_solution.png" >
-          <span class="content">解决方案</span>
+          <span class="text-content">解决方案</span>
         </div>
         <div class="icon-box">
           <img src="../../assets/images/icon_pay.png" >
-          <span class="content">支付保障</span>
+          <span class="text-content">支付保障</span>
         </div>
         <div class="icon-box">
           <img src="../../assets/images/icon_expertconsultant.png" >
-          <span class="content">专家顾问</span>
+          <span class="text-content">专家顾问</span>
         </div>
         <div class="icon-box">
           <img src="../../assets/images/icon_service.png" >
-          <span class="content">第三方服务</span>
+          <span class="text-content">第三方服务</span>
         </div>
       </div>
 
@@ -130,7 +130,7 @@ export default {
         vertical-align: bottom;
       }
 
-      .content {
+      .text-content {
         font-size: .18rem;
         color: $text-black;
       }

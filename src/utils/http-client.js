@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {Msg} from 'utils/tools'
+import { Msg } from 'utils/tools'
 import qs from 'qs'
 
 const CONTENT_TYPE = {
@@ -58,7 +58,7 @@ axios.interceptors.response.use(checkResponse, (error) => {
 })
 
 export class HttpClient {
-  static call (url, {method = 'get', headers = null, body = null, mask = true, postData = false, external = false} = {}) {
+  static call (url, { method = 'get', headers = null, body = null, mask = true, postData = false, external = false } = {}) {
     url = external ? url : API_URL + url
 
     url += url.indexOf('?') === -1 ? '?' : '&'
@@ -101,7 +101,7 @@ export class HttpClient {
   //   })
   // }
 
-  static post (url, {body = {}, method = 'post', mask = true, postData = false, external = true} = {}) {
+  static post (url, { body = {}, method = 'post', mask = true, postData = false, external = true } = {}) {
     return HttpClient.call(url, {
       method,
       headers: {
@@ -114,15 +114,15 @@ export class HttpClient {
     })
   }
 
-  static put (url, {body = {}, mask = true, postData = false, external = false} = {}) {
-    return HttpClient.post(url, {body, method: 'put', postData, external, mask})
+  static put (url, { body = {}, mask = true, postData = false, external = false } = {}) {
+    return HttpClient.post(url, { body, method: 'put', postData, external, mask })
   }
 
-  static destroy (url, {body = {}, mask = true, postData = false, external = false} = {}) {
-    return HttpClient.post(url, {body, method: 'delete', postData, external, mask})
+  static destroy (url, { body = {}, mask = true, postData = false, external = false } = {}) {
+    return HttpClient.post(url, { body, method: 'delete', postData, external, mask })
   }
 
-  static postBody (url, {body = {}, method = 'post', mask = true, postData = true, external = false}) {
+  static postBody (url, { body = {}, method = 'post', mask = true, postData = true, external = false }) {
     return HttpClient.call(url, {
       method,
       headers: {

@@ -85,8 +85,11 @@
           </div>
         </div>
       </div>
-      <div class="see-more flex-center" @click="onFormulaBannerClick">
-        查看更多
+      <div class="loadmore" @click="onFormulaBannerClick">
+        <div class="more-container">
+          <span>查看更多</span>
+          <img src="~images/more.png" >
+        </div>
       </div>
     </section>
 
@@ -101,6 +104,12 @@
             <p class="name single-line">{{item.title}}</p>
             <span class="des third-line">{{item.introduce || '暂无'}}</span>
           </div>
+        </div>
+      </div>
+      <div class="loadmore" @click="onProfessorClick">
+        <div class="more-container">
+          <span>查看更多</span>
+          <img src="~images/more.png" >
         </div>
       </div>
     </section>
@@ -135,8 +144,11 @@
           </p>
         </div>
       </div>
-      <div class="flex-center see-more" @click="onSwapClick">
-        查看更多
+      <div class="loadmore" @click="onSwapClick">
+        <div class="more-container">
+          <span>查看更多</span>
+          <img src="~images/more.png" >
+        </div>
       </div>
     </section>
 
@@ -171,11 +183,11 @@
 </template>
 
 <script>
-import {HomeService} from 'api/index/home-service'
-import {SysPropsService} from 'api/index/sysprops-service'
-import {Tools} from 'utils/tools'
+import { HomeService } from 'api/index/home-service'
+import { SysPropsService } from 'api/index/sysprops-service'
+import { Tools } from 'utils/tools'
 import Swiper from 'swiper'
-import {TabContainer, TabContainerItem, Toast, Spinner, Popup, Badge} from 'mint-ui'
+import { TabContainer, TabContainerItem, Toast, Spinner, Popup, Badge } from 'mint-ui'
 import Footer from './footer'
 import Header from './header'
 
@@ -195,6 +207,7 @@ export default {
       allData: {
         starFormula: []
       },
+      professorOrigin: [], // 专家顾问的原数组
       notice: '',
       banners: '',
       formulators_back: [],
@@ -243,7 +256,7 @@ export default {
 
     onStarFormulaClick (id) {
       this.$router.push({
-        path: '/producer/detail',
+        path: '/star-formula/detail',
         query: {
           id
         }
@@ -266,6 +279,19 @@ export default {
       this.activePager = `tab${index}`
     },
 
+    onProfessorClick () {
+      if (this.allData.professor.length > this.professorOrigin.length) {
+        for (let i = this.allData.professor.length, count = 0; i < this.professorOrigin.length; i++) {
+          if (count === 3) {
+            break
+          }
+          this.allData.professor.push(this.professorOrigin[i])
+        }
+      } else {
+        Toast('没有更多了')
+      }
+    },
+
     onLoadMoreClick () {
       let arr = this.allData[this.pagerArrays[this.pagerIndex - 1]]
       let arrBack = this[`${this.pagerArrays[this.pagerIndex - 1]}_back`]
@@ -275,7 +301,7 @@ export default {
       setTimeout(() => {
         console.log(arr.length, arrBack.length)
         if (arr.length > arrBack.length) {
-          for (let i = arrBack.length, count = 0; i < arr.length; i++, count++) {
+          for (let i = arrBack.length, count = 0; i < arr.length; i++ , count++) {
             if (count === 3) {
               break
             }
@@ -420,6 +446,8 @@ export default {
           })
         })
         // 专家顾问只需要3条
+        this.professorOrigin = res.professor.concat([])
+        console.log(this.professorOrigin)
         res.professor.length = res.professor.length < 3
           ? res.professor.length
           : 3
@@ -428,7 +456,6 @@ export default {
         res.centralizedPurchasingSupplier.length = res.centralizedPurchasingSupplier.length < 3
           ? res.centralizedPurchasingSupplier.length
           : 3
-        // console.log(res)
         this.allData = res
 
         this.$nextTick(() => {
@@ -454,7 +481,7 @@ export default {
       }
     })
     // 滚动公告数据 ，暂时只有一条
-    this.sysPropsService.get({propName: 'notice'}).then(res => {
+    this.sysPropsService.get({ propName: 'notice' }).then(res => {
       if (res) {
         this.notice = res[0] ? JSON.parse(res[0].propValue).content : `欢迎来到妆配库`
       }
@@ -470,17 +497,17 @@ export default {
 
 <style lang="scss">
 @import 'swiper/dist/css/swiper.min.css';
-.banner{
-  .swiper-pagination{
+.banner {
+  .swiper-pagination {
     bottom: 0;
   }
-  .swiper-pagination-bullet{
-    width: .4rem;
+  .swiper-pagination-bullet {
+    width: 0.4rem;
     height: 4px;
     margin: 0 5px !important;
     background: white;
     border-radius: 0;
-    opacity: .5;
+    opacity: 0.5;
   }
 
   .swiper-pagination-bullet-active {
@@ -488,43 +515,42 @@ export default {
   }
 }
 
-.star-formula{
-
-   &>.title{
+.star-formula {
+  & > .title {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: .3rem;
+    font-size: 0.3rem;
     color: #333;
-    height: .88rem;
+    height: 0.88rem;
   }
 
-  .swiper-slide{
-    box-shadow: 0 0 .2rem #b7b7b7;
+  .swiper-slide {
+    box-shadow: 0 0 0.2rem #b7b7b7;
     overflow: hidden;
     height: 5.1rem;
     width: 6rem;
     background: white;
 
-    & > img{
-      width:100%;
+    & > img {
+      width: 100%;
       height: 3rem;
       font-size: 0;
       vertical-align: bottom;
     }
 
-    .title{
-      font-size: .24rem;
+    .title {
+      font-size: 0.24rem;
       color: #333;
-      line-height: .4rem;
-      padding: .2rem .3rem 0;
+      line-height: 0.4rem;
+      padding: 0.2rem 0.3rem 0;
     }
 
-    .subject{
-      font-size: .2rem;
+    .subject {
+      font-size: 0.2rem;
       color: #999;
-      line-height: .3rem;
-      padding: 5px .3rem 0;
+      line-height: 0.3rem;
+      padding: 5px 0.3rem 0;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 4;
@@ -532,39 +558,38 @@ export default {
     }
   }
 }
-
 </style>
 
 <style scoped lang="scss">
 @import '~scss/shotcut.scss';
 
-section{
-  margin-bottom: .2rem;
+section {
+  margin-bottom: 0.2rem;
   background: white;
 }
 
-.bg{
+.bg {
   background-color: #f2f2f2;
 }
 
-.broadcast{
-  height: .88rem;
+.broadcast {
+  height: 0.88rem;
   background: white;
-  margin: .2rem 0;
+  margin: 0.2rem 0;
   display: flex;
   align-items: center;
 
-  &>.img{
-    width: .3rem;
-    height: .3rem;
-    padding: 0 .2rem 0 .3rem;
+  & > .img {
+    width: 0.3rem;
+    height: 0.3rem;
+    padding: 0 0.2rem 0 0.3rem;
     flex-shrink: 0;
   }
 
-  .broadcast-list{
+  .broadcast-list {
     flex-grow: 1;
     color: $text-black;
-    font-size: .28rem;
+    font-size: 0.28rem;
     text-align: left;
   }
 }
@@ -579,49 +604,49 @@ section{
   }
 }
 
-.viewpager{
-  margin-bottom: .2rem;
+.viewpager {
+  margin-bottom: 0.2rem;
 
-  .page-header{
-    height: .9rem;
-    font-size: .3rem;
-    color:$text-gray;
+  .page-header {
+    height: 0.9rem;
+    font-size: 0.3rem;
+    color: $text-gray;
     display: flex;
-    background:white;
+    background: white;
     box-sizing: border-box;
     border-bottom: 1px solid $border-gray;
 
-    .page-tab{
+    .page-tab {
       height: 100%;
       flex-grow: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
-      &.active{
+      &.active {
         color: $text-green;
         border-bottom: 4px solid $text-green;
       }
     }
   }
-  .pager-body{
+  .pager-body {
     background: white;
-    padding: .3rem .3rem 0;
+    padding: 0.3rem 0.3rem 0;
 
-    .item-container{
-      padding: .3rem 0;
+    .item-container {
+      padding: 0.3rem 0;
       border-bottom: 1px solid $border-gray;
       display: flex;
       justify-content: space-between;
 
-      &> img {
+      & > img {
         width: 1.8rem;
         height: 1.8rem;
         flex-shrink: 0;
       }
 
-      .content{
-        padding-left: .2rem;
+      .content {
+        padding-left: 0.2rem;
         flex-grow: 1;
         // flex: 1;
         text-align: left;
@@ -630,32 +655,32 @@ section{
           display: flex;
           align-items: center;
           color: $text-black;
-          font-size:.28rem;
-          height:.5rem;
+          font-size: 0.28rem;
+          height: 0.5rem;
         }
 
-        .des{
-          color:$text-french;
-          font-size: .22rem;
-          padding-top: .1rem;
-          line-height: .4rem;
+        .des {
+          color: $text-french;
+          font-size: 0.22rem;
+          padding-top: 0.1rem;
+          line-height: 0.4rem;
         }
       }
     }
   }
 
-  .loadmore{
-    height: .86rem;
-    font-size: .24rem;
+  .loadmore {
+    height: 0.86rem;
+    font-size: 0.24rem;
     color: $text-black;
-    background:white;
-    display:flex;
+    background: white;
+    display: flex;
     justify-content: center;
     align-items: center;
 
     .more-container {
-      display:flex;
-      align-items:center;
+      display: flex;
+      align-items: center;
     }
 
     .loadmore {
@@ -664,48 +689,77 @@ section{
     }
 
     span {
-      margin-right: .1rem;
+      margin-right: 0.1rem;
     }
 
-    img{
-      width: .24rem;
-      height: .24rem;
+    img {
+      width: 0.24rem;
+      height: 0.24rem;
     }
   }
 }
 
-.advisor{
+.loadmore {
+  height: 0.86rem;
+  font-size: 0.24rem;
+  color: $text-black;
   background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  .title{
-    font-size: .3rem;
-    height: .6rem;
-    color: $text-black;
+  .more-container {
     display: flex;
-    justify-content:center;
-    align-items:flex-end;
+    align-items: center;
   }
 
-  .list{
-    padding: 0 .3rem;
+  .loadmore {
+    display: flex;
+    align-items: center;
+  }
 
-    .item-container{
-      padding: .3rem 0;
+  span {
+    margin-right: 0.1rem;
+  }
+
+  img {
+    width: 0.24rem;
+    height: 0.24rem;
+  }
+}
+
+.advisor {
+  background: white;
+
+  .title {
+    font-size: 0.3rem;
+    height: 0.6rem;
+    color: $text-black;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .list {
+    padding: 0 0.3rem;
+
+    .item-container {
+      padding: 0.3rem 0;
       border-bottom: 1px solid $border-gray;
       display: flex;
       justify-content: space-between;
-      &:nth-last-child(1){
+      &:nth-last-child(1) {
         border-bottom: none;
       }
 
-      &> img {
+      & > img {
         width: 1.8rem;
         height: 1.8rem;
         flex-shrink: 0;
       }
 
-      .content{
-        padding-left: .2rem;
+      .content {
+        padding-left: 0.2rem;
         flex-grow: 1;
         flex: 1;
         text-align: left;
@@ -714,138 +768,140 @@ section{
           display: flex;
           align-items: center;
           color: $text-black;
-          font-size:.28rem;
-          height:.5rem;
+          font-size: 0.28rem;
+          height: 0.5rem;
         }
 
-        .des{
-          color:$text-french;
-          font-size: .22rem;
-          padding-top: .1rem;
-          line-height: .4rem;
+        .des {
+          color: $text-french;
+          font-size: 0.22rem;
+          padding-top: 0.1rem;
+          line-height: 0.4rem;
         }
       }
     }
   }
 }
 
-.swap{
-  padding: 0 .3rem .3rem;
+.swap {
+  padding: 0 0.3rem 0.3rem;
 
-  .title{
+  .title {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: .3rem;
+    font-size: 0.3rem;
     color: $text-black;
-    height: .88rem;
+    height: 0.88rem;
   }
 
-  .message{
-    height: .8rem;
+  .message {
+    height: 0.8rem;
     box-sizing: border-box;
     border: 1px solid $border-gray;
     display: flex;
 
-    .left{
-      width:1.8rem;
+    .left {
+      width: 1.8rem;
       box-sizing: border-box;
-      background:#eeeeee;
-      border-right:1px solid $border-gray;
-      font-size: .28rem;
+      background: #eeeeee;
+      border-right: 1px solid $border-gray;
+      font-size: 0.28rem;
       flex-shrink: 0;
     }
 
     .right {
       overflow: hidden;
-      padding: 0 .25rem;
-      font-size: .18rem;
+      padding: 0 0.25rem;
+      font-size: 0.18rem;
       position: relative;
       width: 100%;
 
-      .scroll-text  {
-        height: .4rem;
-        display:inline;
+      .scroll-text {
+        height: 0.4rem;
+        display: inline;
         white-space: nowrap;
         position: absolute;
-        left: .2rem;
+        left: 0.2rem;
 
-        & > li{
-          height: .4rem;
-          line-height: .4rem;
+        & > li {
+          height: 0.4rem;
+          line-height: 0.4rem;
           // float: left;
           white-space: nowrap;
           display: inline-block;
-          margin-right: .2rem;
+          margin-right: 0.2rem;
         }
       }
     }
   }
 
-  .list{
-    padding-top:.15rem;
+  .list {
+    padding-top: 0.15rem;
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
 
-    .goods:nth-last-child(1),.goods:nth-last-child(2){
-      margin-bottom: 0
+    .goods:nth-last-child(1),
+    .goods:nth-last-child(2) {
+      margin-bottom: 0;
     }
-    .goods{
-      padding: .2rem;
+    .goods {
+      padding: 0.2rem;
       border: 1px solid $border-gray;
       box-sizing: border-box;
       text-align: left;
       width: 3.35rem;
-      margin-bottom: .2rem;
+      margin-bottom: 0.2rem;
 
-      &> img{
+      & > img {
         width: 1.8rem;
         height: 1.2rem;
         vertical-align: bottom;
       }
 
-      .name{
-        font-size: .24rem;
+      .name {
+        font-size: 0.24rem;
         color: $text-black;
-        line-height: .4rem;
-        padding-top: .1rem;
+        line-height: 0.4rem;
+        padding-top: 0.1rem;
       }
 
-      .price{
-        font-size: .24rem;
+      .price {
+        font-size: 0.24rem;
         color: $text-green;
-        padding-bottom:.1rem
+        padding-bottom: 0.1rem;
       }
 
-      p.hr{
+      p.hr {
         background: $border-gray;
-        margin-bottom:.1rem
+        margin-bottom: 0.1rem;
       }
 
-      .delivery-location,.stock{
-        font-size: .18rem;
-        line-height: .3rem;
+      .delivery-location,
+      .stock {
+        font-size: 0.18rem;
+        line-height: 0.3rem;
         color: $text-french;
-        padding-bottom: .1rem;
+        padding-bottom: 0.1rem;
       }
     }
   }
 }
 
 .pur {
-  padding: 0 .3rem .4rem;
+  padding: 0 0.3rem 0.4rem;
 
-  .title{
-    height: .9rem;
-    font-size: .3rem;
+  .title {
+    height: 0.9rem;
+    font-size: 0.3rem;
     color: $text-black;
   }
 
-  .content{
+  .content {
     & > img {
-      width:100%;
+      width: 100%;
       height: 3.6rem;
     }
 
@@ -853,8 +909,8 @@ section{
       display: flex;
       justify-content: space-between;
       & > img {
-        width:2.2rem;
-        height:1.4rem;
+        width: 2.2rem;
+        height: 1.4rem;
         border: 1px solid $border-gray;
         box-sizing: border-box;
       }
@@ -863,29 +919,29 @@ section{
 }
 
 .spread {
-  padding: 0 .3rem .3rem;
+  padding: 0 0.3rem 0.3rem;
 
   .title {
-    height:.6rem;
+    height: 0.6rem;
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: flex-end;
-    font-size: .3rem;
-    color: $text-black
+    font-size: 0.3rem;
+    color: $text-black;
   }
 
   .hint {
-    font-size: .24rem;
-    color : #f57627;
-    height: .7rem;
+    font-size: 0.24rem;
+    color: #f57627;
+    height: 0.7rem;
   }
 
   .img-box {
     display: flex;
     justify-content: space-between;
     & > img {
-      width:2.2rem;
-      height:1.8rem;
+      width: 2.2rem;
+      height: 1.8rem;
     }
   }
 }

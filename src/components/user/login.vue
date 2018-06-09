@@ -24,7 +24,7 @@
             </div>
             <div class="btn" :class="!register ? 'register' : ''" @click="registerHandle">{{!register ? '更改密码'  : '立刻注册'}}</div>
             <p class="hint" v-show="register">已有账号, 马上<span @click="activePager = 'tab2'">登录</span></p>
-            <p class="footer-text">Copyright  ? 2006-2017 尚逸网络科技有限公司  保留所有权利</p>
+            <p class="footer-text">Copyright @2018 上海尚逸网络科技有限公司 保留所有权利</p>
             <p class="footer-text">沪ICP备11052906号</p>
           </div>
         </mt-tab-container-item>
@@ -45,7 +45,7 @@
               <span @click="onForgetPwdClick">忘记密码?</span>
               <span @click="activePager = 'tab1'">注册</span>
             </p>
-            <p class="footer-text">Copyright  ? 2006-2017 尚逸网络科技有限公司  保留所有权利</p>
+            <p class="footer-text">Copyright @2018 上海尚逸网络科技有限公司 保留所有权利</p>
             <p class="footer-text">沪ICP备11052906号</p>
           </div>
         </mt-tab-container-item>
@@ -125,6 +125,20 @@ export default {
           this.refreshCode()
         }
       })
+    },
+
+    getCookie (name) {
+      // 获取cookie字符串
+      let strcookie = document.cookie
+      var arrcookie = strcookie.split('; ') // 分割
+      // 遍历匹配
+      for (let i = 0; i < arrcookie.length; i++) {
+        var arr = arrcookie[i].split('=')
+        if (arr[0] === name) {
+          return arr[1]
+        }
+      }
+      return ''
     },
 
     refreshCode () {
@@ -261,6 +275,7 @@ export default {
     this.userService = new UserService()
     // alert('created')
     // this.refreshCode()
+    console.log(this.getCookie('wises_sessionId'))
   },
 
   mounted () {

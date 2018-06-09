@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {MessageBox, Toast} from 'mint-ui'
+import { MessageBox, Toast } from 'mint-ui'
 import $ from 'jquery'
 const ENV = process.env
 const acceptFileTypes = /^image\/(gif|jpe?g|png)$/i
@@ -25,6 +25,10 @@ export class Tools {
     return JSON.parse(localStorage.getItem(ENV.USER_KEY))
   }
 
+  static isLogin () {
+    return Boolean(this.getUser())
+  }
+
   static getRoleType () {
     // Buyer: 2, // 采购商
     //  Supplier: 3, // 供应商
@@ -42,7 +46,7 @@ export class Tools {
   }
 
   static toTop (transition = 0) {
-    $('html,body').animate({scrollTop: 0}, transition)
+    $('html,body').animate({ scrollTop: 0 }, transition)
   }
 
   static checkUploadImg (data, reg = acceptFileTypes) {

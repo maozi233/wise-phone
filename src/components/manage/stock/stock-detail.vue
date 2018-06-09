@@ -26,10 +26,10 @@
         <p>{{detail.customerRemark || '暂无留言'}}</p>
       </div>
     </div>
-    <div class="manager" v-if="detail.content">
-      <p>公司名称： <span>{{detail.content.dtManager.companyName}}</span></p>
-      <p>账号： <span>{{detail.content.dtManager.mobile}}</span></p>
-      <p>联系人： <span>{{detail.content.dtManager.managerName}}</span></p>
+    <div class="manager" v-if="detail.user">
+      <p>公司名称： <span>{{detail.user.companyName}}</span></p>
+      <p>账号： <span>{{detail.user.companyTel}}</span></p>
+      <p>联系人： <span>{{detail.user.realName}}</span></p>
     </div>
 
     <div class="item" v-if="detail">

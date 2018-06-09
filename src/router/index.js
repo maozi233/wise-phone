@@ -85,9 +85,10 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
+  base: '/h5',
   routes: [
     {
-      path: '/',
+      path: '',
       component: Home
     },
     {

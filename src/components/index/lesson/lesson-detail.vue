@@ -49,10 +49,11 @@ import FlexBottom from 'comp/index/flex-bottom'
 import NoData from 'comp/no-data'
 import FlexPopup from 'comp/index/flex-popup'
 import VueQr from 'vue-qr'
-import { Toast } from 'mint-ui'
+import { Toast, MessageBox } from 'mint-ui'
 import { OpenCourseService } from 'api/index/oepncourse-service'
 import { ClientOrderService } from 'api/index/clientorder-service'
 import { PayService } from 'api/index/repay-service'
+import { Tools } from 'utils/tools'
 
 export default {
   components: {
@@ -60,7 +61,8 @@ export default {
     NoData,
     FlexBottom,
     FlexPopup,
-    VueQr
+    VueQr,
+    MessageBox
   },
 
   data () {
@@ -98,7 +100,19 @@ export default {
       if (this.buyed) return
 
       if (!this.isRegister) {
-        this.$refs.flexPop.show()
+        if (Tools.isLogin()) {
+          this.$refs.flexPop.show()
+        } else {
+          MessageBox({
+            title: '提示',
+            message: '请先登录',
+            showCancelButton: true
+          }).then(action => {
+            if (action === 'confirm') {
+              this.$router.push('/login?target=login')
+            }
+          })
+        }
       } else {
         // this.pay()
         this.payService.getIp(this.pay)
@@ -165,9 +179,7 @@ export default {
       if (this.paying) {
         clearInterval(this.paying)
       }
-    },
-
-    getIp () {}
+    }
   },
 
   created () {
@@ -206,30 +218,30 @@ export default {
 <style lang="scss" scoped>
 @import '~scss/shotcut';
 
-.detail{
+.detail {
   text-align: left;
   background: white;
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
 
   .image-container {
     position: relative;
     font-size: 0;
 
     .play {
-      width: .8rem;
-      height: .8rem;
+      width: 0.8rem;
+      height: 0.8rem;
       left: 50%;
       top: 50%;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
       position: absolute;
     }
 
     .back {
       position: absolute;
-      width: .6rem;
-      height: .6rem;
-      left: .2rem;
-      top: .2rem;
+      width: 0.6rem;
+      height: 0.6rem;
+      left: 0.2rem;
+      top: 0.2rem;
     }
 
     .logo {
@@ -242,10 +254,10 @@ export default {
   }
 
   .price {
-    line-height: .9rem;
+    line-height: 0.9rem;
     color: $text-red;
     font-size: 0.3rem;
-    text-indent: .3rem;
+    text-indent: 0.3rem;
 
     &:before {
       content: '¥';
@@ -254,16 +266,16 @@ export default {
   }
 
   .name {
-    font-size: .3rem;
-    margin-bottom: .3rem;
-    text-indent: .3rem;
+    font-size: 0.3rem;
+    margin-bottom: 0.3rem;
+    text-indent: 0.3rem;
   }
 
   .number {
-    text-indent: .3rem;
+    text-indent: 0.3rem;
     font-size: 0.24rem;
     color: $text-french;
-    padding-bottom: .5rem;
+    padding-bottom: 0.5rem;
 
     span {
       color: $text-black;
@@ -272,44 +284,44 @@ export default {
 }
 
 section {
-  padding: 0 .3rem;
+  padding: 0 0.3rem;
   background: white;
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
 
   .title {
-    height: .9rem;
+    height: 0.9rem;
     box-sizing: border-box;
     border-bottom: 1px solid $border-french;
     display: flex;
     align-items: center;
-    font-size: .28rem;
+    font-size: 0.28rem;
   }
 }
 
 .pop-flex-bottom {
-
-  input, textarea {
+  input,
+  textarea {
     width: 100%;
-    height: .8rem;
+    height: 0.8rem;
     box-sizing: border-box;
-    line-height:.5rem;
-    padding: .15rem .2rem;
+    line-height: 0.5rem;
+    padding: 0.15rem 0.2rem;
     border: 1px solid $border-gray;
     background: #f8f8f8;
-    margin-bottom: .3rem;
+    margin-bottom: 0.3rem;
   }
 
   .title {
-    line-height: .75rem;
+    line-height: 0.75rem;
     font-size: 0.36rem;
-    margin-bottom: .1rem;
+    margin-bottom: 0.1rem;
     text-align: center;
   }
 
   button {
     width: 100%;
-    height: .8rem;
-    font-size: .36rem;
+    height: 0.8rem;
+    font-size: 0.36rem;
     color: white;
     background: $text-green;
     margin-bottom: 0.2rem;
@@ -323,12 +335,11 @@ section {
   .pay-code {
     font-size: 0.24rem;
     color: $text-french;
-    padding-top: .25rem;
+    padding-top: 0.25rem;
   }
 
   .flex-center {
     flex-direction: column;
   }
-
 }
 </style>

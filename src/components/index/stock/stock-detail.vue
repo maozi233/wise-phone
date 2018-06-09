@@ -43,7 +43,7 @@
     </section>
 
     <section v-if="detail">
-      <div class="title">爬虫详情</div>
+      <div class="title">技术文档</div>
       <div class="files">
         <a  v-for="(file, index) in detail.exContent.goodsFile" :key="index"
             :href="file.path">{{file.name}}</a>
@@ -148,55 +148,55 @@ export default {
 
 .goods-detail {
   background: white;
-  margin-bottom: .2rem;
-  padding-bottom: .1rem;
+  margin-bottom: 0.2rem;
+  padding-bottom: 0.1rem;
 
   .title {
-    height: .88rem;
+    height: 0.88rem;
     box-sizing: border-box;
     border-bottom: 1px solid $border-french;
-    padding: 0 .3rem;
+    padding: 0 0.3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     & > img {
-      width: .3rem;
-      height: .28rem;
+      width: 0.3rem;
+      height: 0.28rem;
     }
 
     & > span {
       flex-grow: 1;
-      margin-left: -.3rem;
-      font-size: .36rem;
+      margin-left: -0.3rem;
+      font-size: 0.36rem;
     }
   }
 
   .content {
-    padding: 0 .3rem;
+    padding: 0 0.3rem;
     text-align: left;
-    font-size: .24rem;
+    font-size: 0.24rem;
     color: $text-french;
 
-    .price{
-      font-size: .3rem;
+    .price {
+      font-size: 0.3rem;
       color: $text-red;
-      line-height: .9rem;
+      line-height: 0.9rem;
 
       &:before {
         content: '¥';
-        margin-right: .05rem;
+        margin-right: 0.05rem;
       }
     }
 
     .name {
-      font-size: .3rem;
+      font-size: 0.3rem;
       color: $text-black;
-      margin-bottom: .25rem;
+      margin-bottom: 0.25rem;
     }
 
     .des {
-      margin-bottom: .25rem;
+      margin-bottom: 0.25rem;
     }
 
     .stock {
@@ -205,34 +205,35 @@ export default {
       margin-bottom: 0.2rem;
 
       .num {
-        color: $text-blue
+        color: $text-blue;
       }
     }
   }
 }
 
 section {
-  padding: 0 .3rem .1rem;
+  padding: 0 0.3rem 0.1rem;
   background: white;
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
 
   .title {
-    height: .9rem;
+    height: 0.9rem;
     box-sizing: border-box;
     border-bottom: 1px solid $border-french;
     display: flex;
     align-items: center;
-    font-size: .28rem;
+    font-size: 0.28rem;
   }
 }
 
-.count-container,.spec {
+.count-container,
+.spec {
   background: white;
-  margin-bottom: .2rem;
-  padding: 0 .3rem;
+  margin-bottom: 0.2rem;
+  padding: 0 0.3rem;
   color: $text-french;
-  font-size: .24rem;
-  height: .9rem;
+  font-size: 0.24rem;
+  height: 0.9rem;
   text-align: left;
 }
 
@@ -245,22 +246,22 @@ section {
     display: flex;
 
     & > img {
-      width: .6rem;
-      height: .6rem;
+      width: 0.6rem;
+      height: 0.6rem;
       vertical-align: middle;
 
       &:nth-of-type(1) {
-        margin-right: .1rem;
+        margin-right: 0.1rem;
       }
       &:nth-of-type(2) {
-        margin-left: .1rem;
+        margin-left: 0.1rem;
       }
     }
   }
 
   .count {
-    width: .7rem;
-    height: .6rem;
+    width: 0.7rem;
+    height: 0.6rem;
     background: #f4f4f4;
     color: $text-black;
   }
@@ -270,42 +271,42 @@ section {
   display: flex;
   align-items: center;
 
-  span{
-    margin-left: .24rem;
+  span {
+    margin-left: 0.24rem;
     color: $text-black;
   }
 }
 
 .explain {
   text-align: left;
-  padding-bottom: .25rem;
+  padding-bottom: 0.25rem;
 
   .tip {
-    height: .8rem;
-    line-height: .8rem;
-    font-size: .28rem;
+    height: 0.8rem;
+    line-height: 0.8rem;
+    font-size: 0.28rem;
   }
 
   .box {
     & > img {
       width: 100%;
-      height: .85rem;
+      height: 0.85rem;
     }
 
-    & > P {
-      line-height: .4rem;
-      font-size: .24rem;
+    & > p {
+      line-height: 0.4rem;
+      font-size: 0.24rem;
       color: $text-french;
     }
   }
 }
 
-.flex-bottom{
+.flex-bottom {
   height: 1rem;
 }
 
 .files {
-  padding: .2rem .3rem;
+  padding: 0.2rem 0.3rem;
   font-size: 0.36rem;
   text-align: left;
   display: flex;
@@ -317,12 +318,12 @@ section {
 }
 </style>
 <style lang="scss">
-.detail-box{
-    font-size:.3rem;
-    overflow-x: auto;
+.detail-box {
+  font-size: 0.3rem;
+  overflow-x: auto;
 
-    img {
-      max-width: 100%;
-    }
+  img {
+    max-width: 100%;
   }
+}
 </style>

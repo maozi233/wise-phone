@@ -132,7 +132,7 @@ export default {
 
     sendConcat () {
       if (!this.concatForm.name || !this.concatForm.tel || !this.concatForm.des) {
-        return Toast({message: '信息未填写完整', position: 'bottom'})
+        return Toast({ message: '信息未填写完整', position: 'bottom' })
       }
       this.$refs.flexPop.hide()
       this.inquiryService.add({
@@ -185,80 +185,83 @@ export default {
 </script>
 
 <style lang="scss">
-.detail-box{
-    font-size:.3rem;
-    overflow-x: auto;
+.detail-box {
+  font-size: 0.3rem;
+  overflow-x: auto;
 
-    img {
-      max-width: 100%;
-    }
+  img {
+    max-width: 100%;
   }
+}
 </style>
 
 <style lang="scss" scoped>
 @import '~scss/shotcut';
 
-.flex-bottom{
+.flex-bottom {
   height: 1rem;
 }
 
 section {
-  padding: 0 .3rem;
+  padding: 0 0.3rem;
   background: white;
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
 
   .title {
-    height: .9rem;
+    height: 0.9rem;
     box-sizing: border-box;
     border-bottom: 1px solid $border-french;
     display: flex;
     align-items: center;
-    font-size: .28rem;
+    font-size: 0.28rem;
   }
 }
 
 .goods-detail {
   background: white;
-  margin-bottom: .2rem;
-  padding-bottom: .1rem;
+  margin-bottom: 0.2rem;
+  padding-bottom: 0.1rem;
 
   .title {
-    height: .88rem;
+    height: 0.88rem;
     box-sizing: border-box;
     border-bottom: 1px solid $border-french;
-    padding: 0 .3rem;
+    padding: 0 0.3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     & > img {
-      width: .3rem;
-      height: .28rem;
+      width: 0.3rem;
+      height: 0.28rem;
     }
 
     & > span {
       flex-grow: 1;
-      margin-left: -.3rem;
-      font-size: .36rem;
+      margin-left: -0.3rem;
+      font-size: 0.36rem;
     }
   }
 
   .name-detail {
-    padding: 0 .3rem;
+    padding: 0 0.3rem;
     text-align: left;
 
     .name-cn {
-      line-height: .9rem;
-      font-size: .3rem;
+      line-height: 0.9rem;
+      font-size: 0.3rem;
     }
 
-    .name-eng,.name-alias,.name-inci {
-      font-size: .24rem;
-      margin-bottom: .2rem;
+    .name-eng,
+    .name-alias,
+    .name-inci {
+      font-size: 0.24rem;
+      margin-bottom: 0.2rem;
       color: $text-french;
     }
 
-    .name-alias > span,.name-inci > span {
+    .name-alias > span,
+    .name-inci > span {
       color: $text-black;
     }
   }
@@ -267,23 +270,24 @@ section {
 .des {
   display: flex;
   background: white;
-  margin-bottom: .2rem;
-  padding: .1rem .3rem;
-  text-align:left;
+  margin-bottom: 0.2rem;
+  padding: 0.1rem 0.3rem;
+  text-align: left;
 
-  .left,.right {
+  .left,
+  .right {
     display: flex;
     flex-direction: column;
-    font-size: .3rem;
+    font-size: 0.3rem;
 
     & > p {
-      line-height: .6rem
+      line-height: 0.6rem;
     }
   }
 
   .left {
     color: $text-french;
-    margin-right: .3rem;
+    margin-right: 0.3rem;
   }
 }
 
@@ -292,18 +296,18 @@ section {
   text-align: left;
 
   & > .title {
-    height:.88rem;
-    line-height:.88rem;
-    font-size: .28rem;
-    padding: 0 .3rem;
+    height: 0.88rem;
+    line-height: 0.88rem;
+    font-size: 0.28rem;
+    padding: 0 0.3rem;
     position: relative;
 
     &:before {
       content: '';
       width: 4px;
-      height: .3rem;
+      height: 0.3rem;
       position: absolute;
-      left: 0 ;
+      left: 0;
       top: 50%;
       transform: translateY(-50%);
       background: $text-green;
@@ -312,8 +316,8 @@ section {
 
   .box {
     background: #f2f2f2;
-    padding: .2rem;
-    padding-bottom: .45rem;
+    padding: 0.2rem;
+    padding-bottom: 0.45rem;
     display: flex;
     flex-wrap: wrap;
 
@@ -321,52 +325,52 @@ section {
       flex-grow: 1;
       width: 50%;
       max-width: 50%;
-      border-right: .1rem solid #f2f2f2;
-      margin-bottom: .1rem;
+      border-right: 0.1rem solid #f2f2f2;
+      margin-bottom: 0.1rem;
       height: 1.2rem;
       display: flex;
       flex-direction: column;
       box-sizing: border-box;
-      padding: .2rem .3rem;
+      padding: 0.2rem 0.3rem;
       background: white;
       &:nth-child(even) {
         border: none;
       }
-      &:nth-last-child(1),&:nth-last-child(2) {
-        margin-bottom : 0;
+      &:nth-last-child(1),
+      &:nth-last-child(2) {
+        margin-bottom: 0;
       }
 
       .name {
-        font-size: .28rem;
-        line-height: .28rem;
-        margin-bottom: .15rem;
+        font-size: 0.28rem;
+        line-height: 0.28rem;
+        margin-bottom: 0.15rem;
       }
 
       .price {
-        font-size: .3rem;
-        color : $text-red;
+        font-size: 0.3rem;
+        color: $text-red;
       }
 
       .subject {
-        font-size:.24rem;
+        font-size: 0.24rem;
         color: $text-french;
       }
     }
-
   }
 }
 
 .pop-flex-bottom {
-
-  input, textarea {
+  input,
+  textarea {
     width: 100%;
-    height: .8rem;
+    height: 0.8rem;
     box-sizing: border-box;
-    line-height:.5rem;
-    padding: .15rem .2rem;
+    line-height: 0.5rem;
+    padding: 0.15rem 0.2rem;
     border: 1px solid $border-gray;
     background: #f8f8f8;
-    margin-bottom: .3rem;
+    margin-bottom: 0.3rem;
   }
 
   textarea {
@@ -376,15 +380,15 @@ section {
   }
 
   p {
-    line-height: .55rem;
-    margin-bottom: .1rem;
+    line-height: 0.55rem;
+    margin-bottom: 0.1rem;
     color: $text-french;
   }
 
   button {
     width: 100%;
-    height: .8rem;
-    font-size: .36rem;
+    height: 0.8rem;
+    font-size: 0.36rem;
     color: white;
     background: $text-green;
   }

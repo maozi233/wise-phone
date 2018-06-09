@@ -27,10 +27,10 @@
       </div>
     </div>
 
-    <div class="manager" v-if="detail.content">
-      <p>公司名称： <span>{{detail.content.dtManager.companyName}}</span></p>
-      <p>账号： <span>{{detail.content.dtManager.mobile}}</span></p>
-      <p>联系人： <span>{{detail.content.dtManager.managerName}}</span></p>
+    <div class="manager" v-if="detail.user">
+      <p>公司名称： <span>{{detail.user.companyName}}</span></p>
+      <p>账号： <span>{{detail.user.companyTel}}</span></p>
+      <p>联系人： <span>{{detail.user.realName}}</span></p>
     </div>
 
     <div class="item" v-if="detail">
@@ -142,22 +142,22 @@ export default {
   background-size: contain;
 }
 
-.contact,.message {
+.contact,
+.message {
   display: flex;
-  padding: 0 .3rem;
+  padding: 0 0.3rem;
   background: white;
 
   .left {
     height: 1.25rem;
     margin-right: 0.15rem;
-    width: .5rem;
-    flex-shrink:  0;
+    width: 0.5rem;
+    flex-shrink: 0;
 
     & > img {
       width: 0.3rem;
       height: 0.34rem;
     }
-
   }
 
   .right {
@@ -165,7 +165,7 @@ export default {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: .1rem 0;
+    padding: 0.1rem 0;
 
     .tips {
       color: $text-french;
@@ -196,10 +196,10 @@ export default {
 
 .manager {
   background: white;
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
   text-align: left;
-  padding: .2rem .4rem;
-  font-size: .26rem;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.26rem;
   line-height: 2;
 }
 
@@ -211,13 +211,13 @@ export default {
   & > .top {
     display: flex;
     align-items: center;
-    height: .9rem;
-    padding: 0 .3rem;
+    height: 0.9rem;
+    padding: 0 0.3rem;
 
     .shop-icon {
       width: 0.3rem;
       height: 0.28rem;
-      margin-right: .1rem;
+      margin-right: 0.1rem;
       flex-shrink: 0;
     }
 
@@ -235,13 +235,13 @@ export default {
 
   & > .content {
     background: #fafafa;
-    padding: .2rem .3rem;
+    padding: 0.2rem 0.3rem;
     display: flex;
 
     & > .left {
       width: 1.4rem;
       height: 1.4rem;
-      margin-right: .15rem;
+      margin-right: 0.15rem;
       flex-shrink: 0;
     }
 
@@ -252,7 +252,7 @@ export default {
 
       p {
         font-size: 0.24rem;
-        line-height: .4rem;
+        line-height: 0.4rem;
         color: $text-french;
       }
 
@@ -271,7 +271,7 @@ export default {
 
       .price {
         font-size: 0.28rem;
-        color:$text-red;
+        color: $text-red;
         margin-bottom: 0.2rem;
       }
 
@@ -279,7 +279,6 @@ export default {
         font-size: 0.24rem;
         color: $text-french;
       }
-
     }
   }
 
@@ -288,7 +287,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 .3rem;
+    padding: 0 0.3rem;
 
     .left {
       color: $text-french;
@@ -299,7 +298,7 @@ export default {
       }
     }
 
-    .right  {
+    .right {
       font-size: 0.24rem;
 
       & > span {
@@ -311,7 +310,7 @@ export default {
 
 .des {
   background: white;
-  padding: .1rem .3rem;
+  padding: 0.1rem 0.3rem;
   font-size: 0.24rem;
   color: $text-french;
   line-height: 0.5rem;
